@@ -1,4 +1,4 @@
-<?php require_once './admin//layouts/header.php' ?>
+<?php require_once './admin/layouts/header.php' ?>
 <main class="w-4/5 mx-auto grid grid-cols-[80%_20%] gap-5 mt-2 p-5">
 
     <div class="flex justify-between">

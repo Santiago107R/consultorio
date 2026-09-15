@@ -1,3 +1,4 @@
+<?php require_once './config/parameters.php' ?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -20,8 +21,8 @@
         <nav>
             <ul class="flex flex-row gap-5">
                 <!-- <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="">Turnos</a></li> -->
-                <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="">Pacientes</a></li>
-                <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="">Doctores</a></li>
+                <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="<?= base_url ?>">Pacientes</a></li>
+                <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="<?= base_url ?>admin/doctores.php">Doctores</a></li>
                 <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="">Especialidades</a></li>
                 <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="">Servicios</a></li>
                 <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="">Coberturas</a></li>
