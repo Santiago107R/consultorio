@@ -21,7 +21,7 @@
         </thead>
         <tbody id="tabla-body" class="grid overflow-y-auto divide-y divide-gray-100">
 
-            <tr class="grid grid-flow-col auto-cols-fr hover:bg-gray-50 transition-colors">
+            <!-- <tr class="grid grid-flow-col auto-cols-fr hover:bg-gray-50 transition-colors">
                 <td class="p-3 text-gray-700">Fernacho</td>
                 <td class="p-3 text-gray-700">Fernacho@gmail.com</td>
                 <td class="p-3 text-gray-700">Pediatría</td>
@@ -43,7 +43,7 @@
 
                     </div>
                 </td>
-            </tr>
+            </tr> -->
 
         </tbody>
     </table>
