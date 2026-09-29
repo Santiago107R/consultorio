@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-09-2026 a las 22:41:40
+-- Tiempo de generación: 29-09-2026 a las 23:52:19
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -45,6 +45,13 @@ CREATE TABLE `coberturas_medica` (
   `id` int(11) NOT NULL,
   `nombre` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `coberturas_medica`
+--
+
+INSERT INTO `coberturas_medica` (`id`, `nombre`) VALUES
+(1, 'Osuthgra');
 
 -- --------------------------------------------------------
 
@@ -108,14 +115,14 @@ CREATE TABLE `pacientes` (
   `id` int(11) NOT NULL,
   `usuario_id` int(11) NOT NULL,
   `cobertura_id` int(11) NOT NULL,
-  `DNI` varchar(100) NOT NULL
+  `dni` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pacientes`
 --
 
-INSERT INTO `pacientes` (`id`, `usuario_id`, `cobertura_id`, `DNI`) VALUES
+INSERT INTO `pacientes` (`id`, `usuario_id`, `cobertura_id`, `dni`) VALUES
 (2, 4, 1, '48640915');
 
 -- --------------------------------------------------------
@@ -278,7 +285,7 @@ ALTER TABLE `agenda_fija`
 -- AUTO_INCREMENT de la tabla `coberturas_medica`
 --
 ALTER TABLE `coberturas_medica`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `doctores`
@@ -339,10 +346,11 @@ ALTER TABLE `usuarios`
 --
 
 --
--- Filtros para la tabla `coberturas_medica`
+-- Filtros para la tabla `agenda_fija`
 --
-ALTER TABLE `coberturas_medica`
-  ADD CONSTRAINT `coberturas_medica_ibfk_1` FOREIGN KEY (`id`) REFERENCES `planes` (`cobertura_id`);
+ALTER TABLE `agenda_fija`
+  ADD CONSTRAINT `fk_agenda_doctor` FOREIGN KEY (`doctor_id`) REFERENCES `doctores` (`id`),
+  ADD CONSTRAINT `fk_agenda_especialidad` FOREIGN KEY (`especialidad_id`) REFERENCES `especialidades` (`id`);
 
 --
 -- Filtros para la tabla `doctores`
@@ -354,37 +362,31 @@ ALTER TABLE `doctores`
 -- Filtros para la tabla `doctor_especialidad`
 --
 ALTER TABLE `doctor_especialidad`
-  ADD CONSTRAINT `doctor_especialidad_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `doctores` (`id`);
-
---
--- Filtros para la tabla `especialidades`
---
-ALTER TABLE `especialidades`
-  ADD CONSTRAINT `especialidades_ibfk_1` FOREIGN KEY (`id`) REFERENCES `doctor_especialidad` (`especialidad_id`);
-
---
--- Filtros para la tabla `estados`
---
-ALTER TABLE `estados`
-  ADD CONSTRAINT `estados_ibfk_1` FOREIGN KEY (`id`) REFERENCES `turnos` (`estado_id`);
+  ADD CONSTRAINT `fk_doc_esp_doctor` FOREIGN KEY (`doctor_id`) REFERENCES `doctores` (`id`),
+  ADD CONSTRAINT `fk_doc_esp_especialidad` FOREIGN KEY (`especialidad_id`) REFERENCES `especialidades` (`id`);
 
 --
 -- Filtros para la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
+  ADD CONSTRAINT `fk_pacientes_cobertura` FOREIGN KEY (`cobertura_id`) REFERENCES `coberturas_medica` (`id`),
   ADD CONSTRAINT `fk_pacientes_usuarios` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `servicios`
+-- Filtros para la tabla `planes`
 --
-ALTER TABLE `servicios`
-  ADD CONSTRAINT `servicios_ibfk_1` FOREIGN KEY (`id`) REFERENCES `turnos` (`servicios_id`);
+ALTER TABLE `planes`
+  ADD CONSTRAINT `fk_planes_cobertura` FOREIGN KEY (`cobertura_id`) REFERENCES `coberturas_medica` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `turnos`
 --
 ALTER TABLE `turnos`
-  ADD CONSTRAINT `turnos_ibfk_1` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`);
+  ADD CONSTRAINT `fk_turnos_doctor` FOREIGN KEY (`doctor_id`) REFERENCES `doctores` (`id`),
+  ADD CONSTRAINT `fk_turnos_especialidad` FOREIGN KEY (`especialidad_id`) REFERENCES `especialidades` (`id`),
+  ADD CONSTRAINT `fk_turnos_estado` FOREIGN KEY (`estado_id`) REFERENCES `estados` (`id`),
+  ADD CONSTRAINT `fk_turnos_paciente` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`),
+  ADD CONSTRAINT `fk_turnos_servicio` FOREIGN KEY (`servicios_id`) REFERENCES `servicios` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

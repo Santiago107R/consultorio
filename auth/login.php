@@ -54,7 +54,7 @@
             const datos = new FormData(form);
 
             try {
-                const respuesta = await fetch('../api/loginApi.php', {
+                const respuesta = await fetch('<?= api_url ?>loginApi.php', {
                     method: 'POST',
                     body: datos
                 });

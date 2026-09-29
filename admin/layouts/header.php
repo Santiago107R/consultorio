@@ -14,6 +14,28 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js" defer></script>
     <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnCerrarSession = document.getElementById('cerrar-session-btn');
+
+            btnCerrarSession?.addEventListener('click', async () => {
+                try {
+                    const respuesta = await fetch('<?= api_url ?>destroySession.php', {
+                        method: 'POST',
+                        credentials: 'same-origin'
+                    });
+
+                    if (!respuesta.ok) {
+                        throw new Error('No se pudo cerrar la sesión.');
+                    }
+
+                    window.location.replace('<?= base_url ?>');
+                } catch (error) {
+                    console.error(error);
+                }
+            });
+        });
+    </script>
 </head>
 
 <body class="min-h-screen">
@@ -43,5 +65,6 @@
             </ul>
         </nav>
 
-        <button class="p-1 rounded-md hover:bg-gray-400/40"><a href="">Cerrar sesión</a></button>
+        <!-- <button class="p-1 rounded-md hover:bg-gray-400/40"><a href="">Cerrar sesión</a></button> -->
+        <button class="p-1 rounded-md hover:bg-gray-400/40" id="cerrar-session-btn">Cerrar sesión</button>
     </header>
