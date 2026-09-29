@@ -51,8 +51,10 @@
     <div class="flex flex-col max-h-[800px] overflow-hidden rounded-lg border border-gray-200 text-sm shadow-md">
         <h2 class="bg-gray-50 uppercase text-xs font-bold text-gray-600 border-b border-gray-200 p-3">Turnos</h2>
         <div class="flex-1 overflow-y-auto p-3 space-y-2">
-            <p>turno 1</p><p>Paciente</p>
-            <p>Fecha</p><p>estado</p>
+            <p>turno 1</p>
+            <p>Paciente</p>
+            <p>Fecha</p>
+            <p>estado</p>
         </div>
     </div>
 </main>

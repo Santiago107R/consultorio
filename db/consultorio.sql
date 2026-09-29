@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-09-2026 a las 02:27:44
+-- Tiempo de generación: 29-09-2026 a las 22:41:40
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -57,6 +57,13 @@ CREATE TABLE `doctores` (
   `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `doctores`
+--
+
+INSERT INTO `doctores` (`id`, `usuario_id`) VALUES
+(2, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -103,6 +110,13 @@ CREATE TABLE `pacientes` (
   `cobertura_id` int(11) NOT NULL,
   `DNI` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pacientes`
+--
+
+INSERT INTO `pacientes` (`id`, `usuario_id`, `cobertura_id`, `DNI`) VALUES
+(2, 4, 1, '48640915');
 
 -- --------------------------------------------------------
 
@@ -162,7 +176,9 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `email`, `nombre`, `contrasena`, `rol`) VALUES
-(2, 'santiagorobles107k@gmail.com', 'Santiago', '$2y$10$ZB5vx9mB.UyulpQYxoBz1.fkpA20LBXdXL356RHkpiJAy8l3vZSYO', 'admin');
+(2, 'santiagorobles107k@gmail.com', 'Santiago', '$2y$10$ZB5vx9mB.UyulpQYxoBz1.fkpA20LBXdXL356RHkpiJAy8l3vZSYO', 'admin'),
+(3, 'eze@gmail.com', 'Ezequiel', '$2y$10$/7laXhW2ncFc7d0w7weVQ.vSGX3J3jmQBZnkjO3iBkKTWtUVCcgLG', 'admin'),
+(4, 'arturo@gmail.com', 'Arturo', '$2y$10$8pkQhr8CXtobw9Tyh1ojpucvUMcpVMWmHnyacGijTYDSPHRFJbeA2', 'admin');
 
 --
 -- Índices para tablas volcadas
@@ -268,7 +284,7 @@ ALTER TABLE `coberturas_medica`
 -- AUTO_INCREMENT de la tabla `doctores`
 --
 ALTER TABLE `doctores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `doctor_especialidad`
@@ -292,7 +308,7 @@ ALTER TABLE `estados`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `planes`
@@ -316,7 +332,7 @@ ALTER TABLE `turnos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
@@ -332,8 +348,13 @@ ALTER TABLE `coberturas_medica`
 -- Filtros para la tabla `doctores`
 --
 ALTER TABLE `doctores`
-  ADD CONSTRAINT `doctores_ibfk_1` FOREIGN KEY (`id`) REFERENCES `doctor_especialidad` (`doctor_id`),
   ADD CONSTRAINT `fk_doctores_usuarios` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `doctor_especialidad`
+--
+ALTER TABLE `doctor_especialidad`
+  ADD CONSTRAINT `doctor_especialidad_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `doctores` (`id`);
 
 --
 -- Filtros para la tabla `especialidades`
@@ -351,14 +372,19 @@ ALTER TABLE `estados`
 -- Filtros para la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  ADD CONSTRAINT `fk_pacientes_usuarios` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `pacientes_ibfk_1` FOREIGN KEY (`id`) REFERENCES `turnos` (`paciente_id`);
+  ADD CONSTRAINT `fk_pacientes_usuarios` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `servicios`
 --
 ALTER TABLE `servicios`
   ADD CONSTRAINT `servicios_ibfk_1` FOREIGN KEY (`id`) REFERENCES `turnos` (`servicios_id`);
+
+--
+-- Filtros para la tabla `turnos`
+--
+ALTER TABLE `turnos`
+  ADD CONSTRAINT `turnos_ibfk_1` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

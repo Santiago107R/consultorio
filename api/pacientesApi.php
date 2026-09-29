@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 	http_response_code(405);
 	echo json_encode([
 		'ok' => false,
-		'mensaje' => 'No se que poner.'
+		'mensaje' => 'Ruta incorrecta'
 	]);
 	exit;
 }
@@ -34,7 +34,7 @@ if (!$consulta) {
 	exit;
 }
 
-$pacientes = $consulta->fetch_all(MYSQLI_ASSOC);
+$pacientes = $consulta->fetch_assoc();
 
 echo json_encode([
 	'ok' => true,
