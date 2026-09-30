@@ -1,31 +1,33 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-include './conexion.php';
-
-$respuesta = [
-    'ok' => false,
-    'mensaje' => ''
-];
-
-$query = 'SELECT id, usuario_id FROM doctores';
-$stmt = $conexion->prepare($query);
-
-if (!$stmt) {
-    http_response_code(500);
-    $respuesta['mensaje'] = 'Error del servidor.';
-    echo json_encode($respuesta);
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    http_response_code(405);
+    echo json_encode([
+        'ok' => false, 
+        'mensaje' => 'Método no permitido.'
+        ]);
     exit;
 }
 
-$stmt->execute();
-$resultado = $stmt->get_result();
-$doctores = $resultado->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
+try {
+    require_once __DIR__ . '/conexion.php';
+    $query = $conexion->query(
+        'SELECT id, usuario_id FROM doctores ORDER BY id ASC'
+    );
 
-http_response_code(200);
-$respuesta['ok'] = true;
-$respuesta['mensaje'] = 'ok';
-$respuesta['doctores'] = $doctores;
+    $doctores = $query->fetch_all(MYSQLI_ASSOC);
+} catch (Throwable $error) {
+    http_response_code(500);
+    echo json_encode([
+        'ok' => false,
+        'mensaje' => 'No se pudieron obtener los doctores.'
+    ]);
+    exit;
+}
 
-echo json_encode($respuesta);
+echo json_encode([
+    'ok' => true,
+    'mensaje' => 'ok',
+    'doctores' => $doctores
+]);
