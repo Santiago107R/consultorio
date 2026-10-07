@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-09-2026 a las 23:52:19
+-- Tiempo de generación: 07-10-2026 a las 19:38:19
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -114,7 +114,7 @@ CREATE TABLE `estados` (
 CREATE TABLE `pacientes` (
   `id` int(11) NOT NULL,
   `usuario_id` int(11) NOT NULL,
-  `cobertura_id` int(11) NOT NULL,
+  `cobertura_id` int(11) DEFAULT NULL,
   `dni` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -123,7 +123,8 @@ CREATE TABLE `pacientes` (
 --
 
 INSERT INTO `pacientes` (`id`, `usuario_id`, `cobertura_id`, `dni`) VALUES
-(2, 4, 1, '48640915');
+(2, 4, 1, '48640915'),
+(3, 5, NULL, '11876454');
 
 -- --------------------------------------------------------
 
@@ -185,7 +186,8 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id`, `email`, `nombre`, `contrasena`, `rol`) VALUES
 (2, 'santiagorobles107k@gmail.com', 'Santiago', '$2y$10$ZB5vx9mB.UyulpQYxoBz1.fkpA20LBXdXL356RHkpiJAy8l3vZSYO', 'admin'),
 (3, 'eze@gmail.com', 'Ezequiel', '$2y$10$/7laXhW2ncFc7d0w7weVQ.vSGX3J3jmQBZnkjO3iBkKTWtUVCcgLG', 'admin'),
-(4, 'arturo@gmail.com', 'Arturo', '$2y$10$8pkQhr8CXtobw9Tyh1ojpucvUMcpVMWmHnyacGijTYDSPHRFJbeA2', 'admin');
+(4, 'arturo@gmail.com', 'Arturo', '$2y$10$8pkQhr8CXtobw9Tyh1ojpucvUMcpVMWmHnyacGijTYDSPHRFJbeA2', 'admin'),
+(5, 'pepe@gmail.com', 'Pepe', '$2y$10$/w9dMR0IjIXxygmVwOQsyutN2YK71rmrnFN6KEuO28hF7i5tVqp3a', 'paciente');
 
 --
 -- Índices para tablas volcadas
@@ -315,7 +317,7 @@ ALTER TABLE `estados`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `planes`
@@ -339,7 +341,7 @@ ALTER TABLE `turnos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas
