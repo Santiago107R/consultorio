@@ -16,13 +16,23 @@
     <div class="flex justify-center items-center min-h-screen w-full bg-black/50 px-4">
 
         <div class="flex flex-col justify-center items-center w-full max-w-sm rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-white p-8">
-            <h2 class="text-xl mb-4 font-semibold">Iniciar Sesión</h2>
+            <h2 class="text-xl mb-4 font-semibold">Crear Cuenta</h2>
             <p id="mensaje" role="status"></p>
             <div class="w-full">
-                <form id="formLogin" class="flex flex-col gap-4">
+                <form id="formRegister" class="flex flex-col gap-4">
                     <div class="flex flex-col gap-1">
                         <label for="email" class="text-sm">Email</label>
                         <input type="email" name="email" id="email" class="bg-white px-3 py-1.5 rounded-md text-sm text-black outline-none focus:ring-2 focus:ring-white/50">
+                    </div>
+                  
+                    <div class="flex flex-col gap-1">
+                        <label for="nombre" class="text-sm">Nombre</label>
+                        <input type="nombre" name="nombre" id="nombre" class="bg-white px-3 py-1.5 rounded-md text-sm text-black outline-none focus:ring-2 focus:ring-white/50">
+                    </div>
+                  
+                    <div class="flex flex-col gap-1">
+                        <label for="dni" class="text-sm">DNI</label>
+                        <input type="dni" name="dni" id="dni" class="bg-white px-3 py-1.5 rounded-md text-sm text-black outline-none focus:ring-2 focus:ring-white/50">
                     </div>
 
                     <div class="flex flex-col gap-1">
@@ -30,7 +40,7 @@
                         <input type="password" name="contrasena" id="contrasena" class="bg-white px-3 py-1.5 rounded-md text-sm text-black outline-none focus:ring-2 focus:ring-white/50">
                     </div>
 
-                    <span id="crear-link" class="cursor-pointer text-blue-600 hover:text-blue-800 hover:underline">¿Ya tienes cuenta? Ingresa aquí</span>
+                    <span id="ingresar-link" class="cursor-pointer text-blue-600 hover:text-blue-800 hover:underline">¿Ya tienes cuenta? Ingresa aquí</span>
 
                     <button type="submit" id="btnSubmit" class="mt-2 py-2 bg-[#2196F3]/30 hover:bg-[#2196F3]/40 transition-colors rounded-md text-sm font-semibold border border-[#2196F3]/10">
                         Entrar
@@ -42,13 +52,13 @@
     </div>
 
     <script>
-        const crearLink = document.getElementById('crear-link');
+        const ingresarLink = document.getElementById('ingresar-link');
 
-        crearLink?.addEventListener('click', async () => {
-            redirect('<?= base_url ?>auth/register.php', true);
+        ingresarLink?.addEventListener('click', async () => {
+            redirect('<?= base_url ?>auth/login.php', true);
         });
 
-        const form = document.getElementById('formLogin');
+        const form = document.getElementById('formRegister');
         const mensaje = document.getElementById('mensaje');
         const btnSubmit = document.getElementById('btnSubmit');
 
@@ -58,12 +68,12 @@
             mensaje.textContent = '';
             mensaje.className = '';
             btnSubmit.disabled = true;
-            btnSubmit.textContent = 'Ingresando…';
+            btnSubmit.textContent = 'Creando…';
 
             const datos = new FormData(form);
 
             try {
-                const respuesta = await fetch('<?= api_url ?>loginApi.php', {
+                const respuesta = await fetch('<?= api_url ?>registerApi.php', {
                     method: 'POST',
                     body: datos
                 });
@@ -71,11 +81,11 @@
                 const resultado = await respuesta.json();
 
                 if (resultado.ok) {
-                    mensaje.textContent = resultado.mensaje || 'Login correcto.';
+                    mensaje.textContent = resultado.mensaje || 'Cuenta creada correctamente.';
                     mensaje.className = 'text-green-500';
-                    redirect('<?= base_url ?>', true);
+                    redirect('<?= base_url ?>auth/login.php', true);
                 } else {
-                    mensaje.textContent = resultado.mensaje || 'No se pudo iniciar sesión.';
+                    mensaje.textContent = resultado.mensaje || 'No se pudo crear la cuenta.';
                     mensaje.className = 'text-red-500';
                 }
             } catch (error) {
@@ -84,7 +94,7 @@
                 console.error(error);
             } finally {
                 btnSubmit.disabled = false;
-                btnSubmit.textContent = 'Iniciar sesión';
+                btnSubmit.textContent = 'Crear cuenta';
             }
         });
     </script>
