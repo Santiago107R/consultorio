@@ -61,7 +61,7 @@
                 <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="<?= base_url ?>admin/doctores.php">Doctores</a></li>
                 <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="<?= base_url ?>admin/especialidades.php">Especialidades</a></li>
                 <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="<?= base_url ?>admin/servicios.php">Servicios</a></li>
-                <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="">Coberturas</a></li>
+                <li class="list-none p-1 rounded-md hover:bg-gray-400/40"><a href="<?= base_url ?>admin/coberturas.php">Coberturas</a></li>
             </ul>
         </nav>
 

@@ -6,7 +6,7 @@
 
     <!-- SECCIÓN IZQUIERDA: Grid de Tarjetas de Especialidades -->
     <div class="space-y-4">
-        <!-- Encabezado de Sección -->
+        
         <div class="flex items-center justify-between">
             <div>
                 <h2 class="text-md font-bold text-gray-800">Especialidades Médicas</h2>
@@ -18,7 +18,7 @@
             </button>
         </div>
 
-        <!-- Contenedor Scrollable de Tarjetas en 2 Columnas -->
+        
         <div class="max-h-[800px] overflow-y-auto pr-1" id="tarjetas-container">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Tarjeta 2: Pediatría -->
+            
                 <div class="relative flex flex-col justify-between overflow-hidden rounded-xl border border-gray-200 bg-white p-2 pl-5 shadow-sm transition-all hover:shadow-md before:absolute before:left-0 before:right-0 before:top-0 before:h-13 before:bg-[#0D47A1]  ">
                     <div>
                         <div class="relative z-10 mb-6 flex items-center justify-between pb-">

@@ -13,11 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 try {
     require_once __DIR__ . '/conexion.php';
 
-    // 1. Obtener todas las especialidades
+
     $queryEsp = $conexion->query('SELECT id, nombre FROM especialidades ORDER BY id ASC');
     $especialidades = $queryEsp->fetch_all(MYSQLI_ASSOC);
 
-    // 2. Obtener los doctores cruzando con doctor_especialidad y usuarios
+
     $queryDoc = $conexion->query(
         'SELECT 
             de.especialidad_id, 
@@ -29,13 +29,12 @@ try {
     );
     $doctores = $queryDoc->fetch_all(MYSQLI_ASSOC);
 
-    // 3. Agrupar los doctores dentro de su respectiva especialidad
     foreach ($especialidades as &$esp) {
         $esp['doctores'] = array_values(array_filter($doctores, function($doc) use ($esp) {
             return $doc['especialidad_id'] == $esp['id'];
         }));
     }
-    unset($esp); // Romper la referencia del foreach
+    unset($esp);
 
 } catch (Throwable $error) {
     http_response_code(500);
