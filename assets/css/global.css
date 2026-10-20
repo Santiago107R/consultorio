@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --app-font-sans: 'Manrope', sans-serif;
+  --app-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  --color-admin-primary: #0D47A1;
+  --color-admin-secondary: #2196F3;
+  --color-admin-light: #90CAF9;
+  --color-admin-surface: #E3F2FD;
+ 
+  --color-paciente-primary: #0d7682;
+  --color-paciente-secondary: #2c5282;
+  --color-paciente-tertiary: #0f9f90;
+  --color-paciente-neutral: #5a6578;
+  --color-paciente-text: #53635a;
+  --color-paciente-text-gray: oklch(37.3% 0.034 259.733);
+  --color-paciente-white: #ffffff;
+  --color-paciente-gray: #f1f5f9;
+  --color-paciente-badge-bg: #e0f2fe;
+  --color-paciente-badge-text: #0369a1;
+  --color-paciente-background: #f9f9ff;
+}
+
+body,
+.font-sans {
+  font-family: var(--app-font-sans);
+}
+
+code,
+kbd,
+pre,
+samp,
+.font-mono {
+  font-family: var(--app-font-mono);
+}
