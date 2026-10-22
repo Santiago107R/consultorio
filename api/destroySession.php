@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../config/parameters.php';
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     header('Allow: POST');
@@ -11,4 +13,5 @@ session_start();
 $_SESSION = [];
 
 session_destroy();
-http_response_code(204);
+header('Location: ' . base_url);
+exit;

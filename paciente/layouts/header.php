@@ -12,28 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js" defer></script>
     <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js" defer></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const btnCerrarSession = document.getElementById('cerrar-session-btn');
-
-            btnCerrarSession?.addEventListener('click', async () => {
-                try {
-                    const respuesta = await fetch('<?= api_url ?>destroySession.php', {
-                        method: 'POST',
-                        credentials: 'same-origin'
-                    });
-
-                    if (!respuesta.ok) {
-                        throw new Error('No se pudo cerrar la sesión.');
-                    }
-
-                    window.location.replace('<?= base_url ?>');
-                } catch (error) {
-                    console.error(error);
-                }
-            });
-        });
-    </script>
     <link rel="stylesheet" href="<?= base_url ?>assets/css/global.css">
 </head>
 
@@ -68,12 +46,14 @@
                 <ion-icon name="person-circle-outline" class="size-6"></ion-icon>
             </div>
 
-            <button 
-                id="cerrar-session-btn"
-                class="flex items-center justify-center p-1 cursor-pointer"
-                title="Cerrar sesión"
-            >
-                <ion-icon name="log-out-outline" class="size-6"></ion-icon>
-            </button>
+            <form action="<?= api_url ?>destroySession.php" method="post">
+                <button
+                    class="flex items-center justify-center p-1 cursor-pointer"
+                    title="Cerrar sesión"
+                    type="submit"
+                >
+                    <ion-icon name="log-out-outline" class="size-6"></ion-icon>
+                </button>
+            </form>
         </div>
     </header>
