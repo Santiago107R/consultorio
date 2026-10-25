@@ -12,9 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mensaje = 'Debés completar email y contraseña.';
         $mensajeClase = 'text-red-500';
     } else {
-        require_once __DIR__ . '/../api/conexion.php';
+        require_once __DIR__ . '/../config/conexion.php';
         $consulta = $conexion->prepare(
-            'SELECT email, nombre, contrasena, rol FROM usuarios WHERE email = ?'
+            'SELECT id, email, nombre, contrasena, rol FROM usuarios WHERE email = ?'
         );
         $consulta->bind_param('s', $email);
         $consulta->execute();

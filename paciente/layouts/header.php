@@ -29,9 +29,9 @@
 
             <nav>
                 <ul class="flex flex-row gap-2">
-                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>">Mis Turnos</a></li>
-                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>admin/doctores.php">Nuevo Turno</a></li>
-                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>admin/especialidades.php">Mi Perfil</a></li>
+                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>paciente/turnos.php">Mis Turnos</a></li>
+                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>paciente/sacarTurno.php">Nuevo Turno</a></li>
+                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>paciente/perfil.php">Mi Perfil</a></li>
                     </ul>
             </nav>
         </div>    

@@ -21,10 +21,12 @@
         </div>
 
         <button class="flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors rounded-md bg-(--color-paciente-primary) text-(--color-paciente-white) hover:opacity-90 whitespace-nowrap">
-            <span class="flex items-center justify-center gap-2">
-                <ion-icon class="size-5" name="add-circle-outline"></ion-icon> 
-                Solicitar Nuevo Turno
-            </span>
+            <a href="sacarTurno.php">
+                <span class="flex items-center justify-center gap-2">
+                    <ion-icon class="size-5" name="add-circle-outline"></ion-icon> 
+                    Solicitar Nuevo Turno
+                </span>
+            </a>    
         </button>
     </div>
 
