@@ -1,6 +1,32 @@
 <?php
  require_once $_SERVER['DOCUMENT_ROOT'] . '/consultorio/config/parameters.php';
  session_start();
+
+    function formatearFecha(string $fecha) {
+        $dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        $meses = [
+            1 => 'Enero', 
+            2 => 'Febrero',
+            3 => 'Marzo',
+            4 => 'Abril',
+            5 => 'Mayo',
+            6 => 'Junio',
+            7 => 'Julio',
+            8 => 'Agosto', 
+            9 => 'Septiembre', 
+            10 => 'Octubre', 
+            11 => 'Noviembre', 
+            12 => 'Diciembre'
+        ];
+
+        $timestamp = strtotime($fecha);
+
+        $dia = $dias[date('w', $timestamp)];
+        $numero = date('j', $timestamp);
+        $mes = $meses[(int) date('n', $timestamp)];
+
+        return "$dia $numero de $mes";
+    }
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -29,7 +55,7 @@
 
             <nav>
                 <ul class="flex flex-row gap-2">
-                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>paciente/turnos.php">Mis Turnos</a></li>
+                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>paciente/proximosTurnos.php">Mis Turnos</a></li>
                     <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>paciente/sacarTurno.php">Nuevo Turno</a></li>
                     <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>paciente/perfil.php">Mi Perfil</a></li>
                     </ul>

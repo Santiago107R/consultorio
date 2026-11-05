@@ -27,6 +27,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mensajeClase = 'text-red-500';
         } else {
             unset($usuario['contrasena']);
+
+            if ($usuario['rol'] === 'doctor') {
+                $stmt = $conexion->prepare('SELECT id FROM doctores WHERE usuario_id = ?');
+                $clave = 'doctor_id';
+            } elseif ($usuario['rol'] === 'paciente') {
+                $stmt = $conexion->prepare('SELECT id FROM pacientes WHERE usuario_id = ?');
+                $clave = 'paciente_id';
+            } else {
+                $stmt = null;
+            }
+
+            if ($stmt) {
+                $stmt->bind_param('i', $usuario['id']);
+                $stmt->execute();
+                $fila = $stmt->get_result()->fetch_assoc();
+                $stmt->close();
+
+                if ($fila) {
+                    $usuario[$clave] = $fila['id'];
+                }
+            }
+
             session_start();
             $_SESSION['usuario'] = $usuario;
             header('Location: ' . base_url);
