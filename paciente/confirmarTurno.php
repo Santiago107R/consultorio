@@ -58,7 +58,7 @@ if (!empty($_POST['practica_id']) && !empty($_POST['tipo_practica'])) {
     $stmt->bind_param($tipos, ...$valores);
     
     if ($stmt->execute()) {
-        header("Location: proximosTurnos.php");
+        header("Location: index.php");
         exit();
     } else {
         echo "Error al guardar el turno: " . $stmt->error;

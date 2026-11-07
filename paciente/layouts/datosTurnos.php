@@ -83,14 +83,14 @@
             </p>
         </div>
 
-        <button class="flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors rounded-md bg-(--color-paciente-primary) text-(--color-paciente-white) hover:opacity-90 whitespace-nowrap">
-            <a href="sacarTurno.php">
+        <a href="./sacarTurno.php">
+            <button class="flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors rounded-md bg-(--color-paciente-primary) text-(--color-paciente-white) hover:opacity-90 whitespace-nowrap">
                 <span class="flex items-center justify-center gap-2">
                     <ion-icon class="size-5" name="add-circle-outline"></ion-icon> 
                     Solicitar Nuevo Turno
                 </span>
-            </a>    
-        </button>
+            </button>
+        </a>    
     </div>
 
    <div class="w-full grid grid-cols-3 gap-4">

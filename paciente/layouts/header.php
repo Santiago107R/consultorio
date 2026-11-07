@@ -1,6 +1,11 @@
 <?php
- require_once $_SERVER['DOCUMENT_ROOT'] . '/consultorio/config/parameters.php';
- session_start();
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/consultorio/config/parameters.php';
+    
+    session_start();
+
+    if ( !isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== "paciente") {
+        header('Location: ' . base_url);
+    }
 
     function formatearFecha(string $fecha) {
         $dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -55,7 +60,7 @@
 
             <nav>
                 <ul class="flex flex-row gap-2">
-                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>paciente/proximosTurnos.php">Mis Turnos</a></li>
+                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>paciente/index.php">Mis Turnos</a></li>
                     <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>paciente/sacarTurno.php">Nuevo Turno</a></li>
                     <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>paciente/perfil.php">Mi Perfil</a></li>
                     </ul>

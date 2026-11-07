@@ -1,4 +1,12 @@
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/consultorio/config/parameters.php'; ?>
+<?php
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/consultorio/config/parameters.php';
+    
+    session_start();
+
+    if ( !isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== "admin") {
+        header('Location: ' . base_url);
+    }
+?>
 <!DOCTYPE html>
 <html lang="es">
 
