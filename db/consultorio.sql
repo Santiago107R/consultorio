@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-11-2026 a las 18:08:40
+-- Tiempo de generación: 09-11-2026 a las 22:16:27
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -64,6 +64,27 @@ CREATE TABLE `coberturas_medica` (
 
 INSERT INTO `coberturas_medica` (`id`, `nombre`) VALUES
 (1, 'Osuthgra');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `consultorios`
+--
+
+CREATE TABLE `consultorios` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `consultorios`
+--
+
+INSERT INTO `consultorios` (`id`, `nombre`) VALUES
+(1, 'Consultorio 1'),
+(2, 'Consultorio 2'),
+(3, 'Consultorio 3'),
+(4, 'Consultorio 4');
 
 -- --------------------------------------------------------
 
@@ -187,7 +208,8 @@ CREATE TABLE `pacientes` (
 
 INSERT INTO `pacientes` (`id`, `usuario_id`, `cobertura_id`, `dni`, `historia_clinica`) VALUES
 (2, 4, 1, '48640915', NULL),
-(3, 5, NULL, '11876454', 'Tiene cancer');
+(3, 5, NULL, '11876454', 'Tiene cancer'),
+(4, 9, NULL, '40657541', NULL);
 
 -- --------------------------------------------------------
 
@@ -255,6 +277,7 @@ CREATE TABLE `turnos` (
   `especialidad_id` int(11) DEFAULT NULL,
   `servicio_id` int(11) DEFAULT NULL,
   `doctor_id` int(11) DEFAULT NULL,
+  `consultorio_id` int(11) DEFAULT NULL,
   `estado_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -262,11 +285,11 @@ CREATE TABLE `turnos` (
 -- Volcado de datos para la tabla `turnos`
 --
 
-INSERT INTO `turnos` (`id`, `fecha`, `hora`, `paciente_id`, `especialidad_id`, `servicio_id`, `doctor_id`, `estado_id`) VALUES
-(2, '2026-10-26', '08:00:00', 3, 1, NULL, 3, 1),
-(3, '2026-11-10', '09:00:00', 3, 2, NULL, 4, 2),
-(4, '2026-11-16', '08:00:00', 3, 1, NULL, 3, 1),
-(6, '2026-11-11', '07:00:00', 3, NULL, 1, NULL, 1);
+INSERT INTO `turnos` (`id`, `fecha`, `hora`, `paciente_id`, `especialidad_id`, `servicio_id`, `doctor_id`, `consultorio_id`, `estado_id`) VALUES
+(2, '2026-10-26', '08:00:00', 3, 1, NULL, 3, NULL, 1),
+(3, '2026-11-10', '09:00:00', 3, 2, NULL, 4, NULL, 2),
+(4, '2026-11-16', '08:00:00', 3, 1, NULL, 3, NULL, 1),
+(6, '2026-11-11', '07:00:00', 3, NULL, 1, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -282,6 +305,7 @@ CREATE TABLE `turnos_historicos` (
   `especialidad_id` int(11) DEFAULT NULL,
   `servicio_id` int(11) DEFAULT NULL,
   `doctor_id` int(11) DEFAULT NULL,
+  `consultorio_id` int(11) DEFAULT NULL,
   `estado_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -289,8 +313,8 @@ CREATE TABLE `turnos_historicos` (
 -- Volcado de datos para la tabla `turnos_historicos`
 --
 
-INSERT INTO `turnos_historicos` (`id`, `fecha`, `hora`, `paciente_id`, `especialidad_id`, `servicio_id`, `doctor_id`, `estado_id`) VALUES
-(1, '2026-11-11', '10:07:32', 3, 1, NULL, 3, 3);
+INSERT INTO `turnos_historicos` (`id`, `fecha`, `hora`, `paciente_id`, `especialidad_id`, `servicio_id`, `doctor_id`, `consultorio_id`, `estado_id`) VALUES
+(1, '2026-11-11', '10:07:32', 3, 1, NULL, 3, NULL, 3);
 
 -- --------------------------------------------------------
 
@@ -317,7 +341,8 @@ INSERT INTO `usuarios` (`id`, `email`, `nombre`, `contrasena`, `rol`) VALUES
 (5, 'pepe@gmail.com', 'Pepe', '$2y$10$/w9dMR0IjIXxygmVwOQsyutN2YK71rmrnFN6KEuO28hF7i5tVqp3a', 'paciente'),
 (6, 'dr.perez@clinica.com', 'Juan Pérez', '123456', 'doctor'),
 (7, 'dra.gomez@clinica.com', 'Ana Gómez', '123456', 'doctor'),
-(8, 'dr.martinez@clinica.com', 'Luis Martínez', '123456', 'doctor');
+(8, 'dr.martinez@clinica.com', 'Luis Martínez', '123456', 'doctor'),
+(9, 'secretario@gmail.com', 'Charli kirck', '$2y$10$4HeJKW9zV6I2M3IBfXvCbezoW5INLkwXGkENirQRtKku1WcSbWtNq', 'secretario');
 
 --
 -- Índices para tablas volcadas
@@ -335,6 +360,12 @@ ALTER TABLE `agenda_fija`
 -- Indices de la tabla `coberturas_medica`
 --
 ALTER TABLE `coberturas_medica`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `consultorios`
+--
+ALTER TABLE `consultorios`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -394,7 +425,8 @@ ALTER TABLE `turnos`
   ADD KEY `especialidad_id` (`especialidad_id`),
   ADD KEY `servicios_id` (`servicio_id`),
   ADD KEY `doctor_id` (`doctor_id`),
-  ADD KEY `estado_id` (`estado_id`);
+  ADD KEY `estado_id` (`estado_id`),
+  ADD KEY `consultorio_id` (`consultorio_id`);
 
 --
 -- Indices de la tabla `turnos_historicos`
@@ -405,7 +437,8 @@ ALTER TABLE `turnos_historicos`
   ADD KEY `especialidad_id` (`especialidad_id`),
   ADD KEY `servicio_id` (`servicio_id`),
   ADD KEY `doctor_id` (`doctor_id`),
-  ADD KEY `estado_id` (`estado_id`);
+  ADD KEY `estado_id` (`estado_id`),
+  ADD KEY `consultorio_id` (`consultorio_id`);
 
 --
 -- Indices de la tabla `usuarios`
@@ -429,6 +462,12 @@ ALTER TABLE `agenda_fija`
 --
 ALTER TABLE `coberturas_medica`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `consultorios`
+--
+ALTER TABLE `consultorios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `doctores`
@@ -458,7 +497,7 @@ ALTER TABLE `estados`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `planes`
@@ -488,7 +527,7 @@ ALTER TABLE `turnos_historicos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas
@@ -535,7 +574,8 @@ ALTER TABLE `turnos`
   ADD CONSTRAINT `fk_turnos_especialidad` FOREIGN KEY (`especialidad_id`) REFERENCES `especialidades` (`id`),
   ADD CONSTRAINT `fk_turnos_estado` FOREIGN KEY (`estado_id`) REFERENCES `estados` (`id`),
   ADD CONSTRAINT `fk_turnos_paciente` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`),
-  ADD CONSTRAINT `fk_turnos_servicio` FOREIGN KEY (`servicio_id`) REFERENCES `servicios` (`id`);
+  ADD CONSTRAINT `fk_turnos_servicio` FOREIGN KEY (`servicio_id`) REFERENCES `servicios` (`id`),
+  ADD CONSTRAINT `turnos_ibfk_1` FOREIGN KEY (`consultorio_id`) REFERENCES `consultorios` (`id`);
 
 --
 -- Filtros para la tabla `turnos_historicos`
@@ -545,7 +585,8 @@ ALTER TABLE `turnos_historicos`
   ADD CONSTRAINT `turnos_historicos_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `doctores` (`id`),
   ADD CONSTRAINT `turnos_historicos_ibfk_3` FOREIGN KEY (`servicio_id`) REFERENCES `servicios` (`id`),
   ADD CONSTRAINT `turnos_historicos_ibfk_4` FOREIGN KEY (`especialidad_id`) REFERENCES `especialidades` (`id`),
-  ADD CONSTRAINT `turnos_historicos_ibfk_5` FOREIGN KEY (`estado_id`) REFERENCES `estados` (`id`);
+  ADD CONSTRAINT `turnos_historicos_ibfk_5` FOREIGN KEY (`estado_id`) REFERENCES `estados` (`id`),
+  ADD CONSTRAINT `turnos_historicos_ibfk_6` FOREIGN KEY (`consultorio_id`) REFERENCES `consultorios` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

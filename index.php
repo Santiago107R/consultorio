@@ -7,6 +7,8 @@ if (isset($_SESSION['usuario'])) {
         header("Location: ./admin/index.php");
     } elseif ($_SESSION['usuario']['rol'] == "paciente") {
         header("Location: ./paciente/index.php");
+    } elseif ($_SESSION['usuario']['rol'] == "secretario") {
+        header("Location: ./secretario/index.php");
     } else {
         header("Location: ./auth/login.php");
     }

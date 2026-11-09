@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
         $mensaje = 'Ingresá un email válido.';
     } else {
-        require_once __DIR__ . '/../api/conexion.php';
+        require_once __DIR__ . '/../config/conexion.php';
         $rol = 'paciente';
         $nombre = ucfirst($nombre);
 
