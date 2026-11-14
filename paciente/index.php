@@ -5,8 +5,6 @@
 
     $practica = $_GET['filtro'] ?? '';
 
-    $paciente_id = $_SESSION['usuario']['paciente_id'];
-
     if ($practica === "especialidades") {
         $query = "SELECT t.id, t.fecha, t.hora, e.nombre AS especialidad, u.nombre AS doctor, es.nombre AS estado
                   FROM turnos AS t

@@ -3,7 +3,7 @@
     
     session_start();
 
-    if ( !isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== "secretario") {
+    if ( !isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== "doctor") {
         header('Location: ' . base_url);
     }
 ?>
@@ -31,6 +31,13 @@
                     PORTAL DEL PACIENTE
                 </span>
             </div>     
+
+               <nav>
+                <ul class="flex flex-row gap-2">
+                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>doctor/index.php">Inicio</a></li>
+                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>doctor/agenda.php">Agenda</a></li>
+                    </ul>
+            </nav>
         </div>    
 
        <div class="flex items-center gap-3">
