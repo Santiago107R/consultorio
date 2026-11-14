@@ -44,10 +44,6 @@
     $stmt->execute();
     $turnos = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-    function h(string $valor) {
-        return htmlspecialchars( $valor, ENT_QUOTES, 'UTF-8');
-    }
-
     function url_filtro(array $cambios): string {
         $params = array_merge($_GET, $cambios);
         $params = array_filter($params, fn($v) => $v !== null && $v !== '');
@@ -72,14 +68,15 @@
 
             <a href="<?= url_filtro(['estado' => null]) ?>" class="<?= clase_filtro('estado', null) ?>">Todos</a>
             <a href="<?= url_filtro(['estado' => 'Pendiente']) ?>" class="<?= clase_filtro('estado', 'Pendiente') ?>">Pendientes</a>
-            <a href="<?= url_filtro(['estado' => 'Confirmado']) ?>" class="<?= clase_filtro('estado', 'Confirmado') ?>">Confirmados</a>
+            <a href="<?= url_filtro(['estado' => 'Aprobado']) ?>" class="<?= clase_filtro('estado', 'Aprobado') ?>">Aprobados</a>
+            <a href="<?= url_filtro(['estado' => 'Cancelado por la clinica']) ?>" class="<?= clase_filtro('estado', 'Cancelado por la clinica') ?>">Cancelado por la clinica</a>
 
             <a href="<?= url_filtro(['orden' => 'asc']) ?>" class="<?= clase_filtro('orden', 'asc') ?>">Ascendiente</a>
             <a href="<?= url_filtro(['orden' => 'desc']) ?>" class="<?= clase_filtro('orden', 'desc') ?>">Descendiente</a>
         </div>
     </div>
 
-    <div class="min-h-90 grid grid-cols-1 overflow-y-auto rounded-lg text-sm">
+    <div id="tabla_body" class="min-h-90 grid grid-cols-1 overflow-y-auto rounded-lg text-sm">
         <table class="w-full border-separate border-spacing-0 text-center">
             <thead class="sticky top-0 z-10">
                 <tr>
@@ -97,50 +94,59 @@
                     </tr>
                 <?php endif; ?>
                 
+                <?php $indiceTurno = 0; ?>
                 <?php foreach ($turnos as $turno): ?>
-                <tr class="group h-20" data-turno-id="<?= (int) $turno['id'] ?>">
-                    <td class="px-3 bg-white group-hover:bg-slate-50 transition-colors border-b border-slate-100 group-last:border-b-0 group-last:rounded-bl-lg">
-                        <div class="flex flex-col">
-                            <span><?= h(date('d/m/Y', strtotime($turno['fecha']))) ?></span>
-                            <span><?= h(substr($turno['hora'], 0, 5)) ?>hs / <?= h($turno['consultorio'] ?? 'Sin asignar') ?></span>
-                        </div>
-                    </td>
-                    <td class="px-3 bg-white group-hover:bg-slate-50 transition-colors border-b border-slate-100 group-last:border-b-0">
-                        <div class="flex flex-col">
-                            <span><?= h($turno['paciente']) ?></span>
-                            <span>DNI: <?= h($turno['dni']) ?></span>
-                            <span><?= h($turno['cobertura'] ?? 'Sin cobertura') ?></span>
-                        </div>
-                    </td>
-                    <td class="px-3 bg-white group-hover:bg-slate-50 transition-colors border-b border-slate-100 group-last:border-b-0">
-                        <div class="flex flex-col">
-                            <span><?= h($turno['doctor']) ?></span>
-                            <span><?= h($turno['motivo'] ?? '-') ?></span>
-                        </div>
-                    </td>
-                    <td class="px-3 bg-white group-hover:bg-slate-50 transition-colors border-b border-slate-100 group-last:border-b-0">
-                        <span class="<?= badge_status_classes[$turno['estado']] ?? '' ?> rounded-lg px-2">
-                            <?= h($turno['estado']) ?>
-                        </span>
-                    </td>
-                    <td class="px-3 bg-white group-hover:bg-slate-50 transition-colors border-b border-slate-100 group-last:border-b-0 group-last:rounded-br-lg">
-                        <div class="relative flex items-center justify-center">
-                            <button type="button"
-                                    data-menu-toggle="menu-<?= $indicePaciente ?>"
-                                    class="p-1 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-center">
-                                <ion-icon name="ellipsis-vertical-outline" class="pointer-events-none"></ion-icon>
-                            </button>
-                            <div id="menu-<?= $indicePaciente ?>"
-                                 class="action-menu hidden fixed z-50 bg-white rounded-md shadow-lg border border-gray-200 w-32 py-1">
-                                <ul class="flex flex-col text-left">
-                                    <li data-action="turnos" class="list-none px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">Turnos</li>
-                                    <li data-action="editar" class="list-none px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">Editar</li>
-                                    <li data-action="eliminar" class="list-none px-4 py-2 hover:bg-red-50 text-red-600 cursor-pointer text-sm">Eliminar</li>
-                                </ul>
+                    <tr class="group h-20">
+                        <td class="px-3 bg-white group-hover:bg-slate-50 transition-colors border-b border-slate-100 group-last:border-b-0 group-last:rounded-bl-lg">
+                            <div class="flex flex-col">
+                                <span><?= date('d/m/Y', strtotime($turno['fecha'])) ?></span>
+                                <span><?= substr($turno['hora'], 0, 5) ?>hs / <?= $turno['consultorio'] ?? 'Sin asignar' ?></span>
                             </div>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                        <td class="px-3 bg-white group-hover:bg-slate-50 transition-colors border-b border-slate-100 group-last:border-b-0">
+                            <div class="flex flex-col">
+                                <span><?= $turno['paciente'] ?></span>
+                                <span>DNI: <?= $turno['dni'] ?></span>
+                                <span><?= $turno['cobertura'] ?? 'Sin cobertura' ?></span>
+                            </div>
+                        </td>
+                        <td class="px-3 bg-white group-hover:bg-slate-50 transition-colors border-b border-slate-100 group-last:border-b-0">
+                            <div class="flex flex-col">
+                                <span><?= $turno['doctor'] ?></span>
+                                <span><?= $turno['motivo'] ?? '-' ?></span>
+                            </div>
+                        </td>
+                        <td class="px-3 bg-white group-hover:bg-slate-50 transition-colors border-b border-slate-100 group-last:border-b-0">
+                            <span class="<?= badge_status_classes[$turno['estado']] ?? '' ?> rounded-lg px-2">
+                                <?= $turno['estado'] ?>
+                            </span>
+                        </td>
+                        <td class="px-3 bg-white group-hover:bg-slate-50 transition-colors border-b border-slate-100 group-last:border-b-0 group-last:rounded-br-lg">
+                           <div class="relative flex items-center justify-center">
+                                <button onclick="toggleMenu(event, 'menu-<?= $indiceTurno ?>')" class="cursor-pointer p-1 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-center">
+                                    <ion-icon name="ellipsis-vertical-outline" class="pointer-events-none"></ion-icon>
+                                </button>
+                                <div id="menu-<?= $indiceTurno ?>" class="action-menu hidden fixed z-50 bg-white rounded-md shadow-lg border border-gray-200 w-32 py-1">
+                                    <ul class="flex flex-col text-left">
+                                        <?php if (empty($turno['consultorio'])): ?>
+                                            <a href="asignarConsultorio.php?id=<?= $turno['id'] ?>">
+                                                <li class="list-none px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">Asignar Consultorio</li>
+                                            </a>
+                                        <?php else: ?>
+                                                <a href="cambiarEstado.php?id=<?= $turno['id'] ?>&estado=7">
+                                                    <li class="list-none px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">Aprobar</li>
+                                                </a>
+
+                                                <a href="cambiarEstado.php?id=<?= $turno['id'] ?>&estado=5">
+                                                    <li class="list-none px-4 py-2 hover:bg-red-50 text-red-600 cursor-pointer text-sm">Cancelar</li>
+                                                </a>
+                                        <?php endif; ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php $indiceTurno++; ?>
                 <?php endforeach; ?>
             </tbody>
         </table>
@@ -149,45 +155,34 @@
 </main>
 
 <script>
-    const cerrarMenus = (excepto = null) => {
-        document.querySelectorAll('.action-menu').forEach(menu => {
-            if (menu !== excepto) menu.classList.add('hidden');
-        });
-    };
+    function toggleMenu(event, menuId) {
+        event.stopPropagation();
 
-    document.addEventListener('click', (e) => {
-        const boton = e.target.closest('[data-menu-toggle]');
+        const menu = document.getElementById(menuId);
+        const isCurrentlyHidden = menu.classList.contains('hidden');
 
-        if (!boton) {
-            if (!e.target.closest('.action-menu')) cerrarMenus();
-            return;
+        document.querySelectorAll('.action-menu').forEach(m => m.classList.add('hidden'));
+
+        if (isCurrentlyHidden) {
+            const btn = event.currentTarget;
+            const rect = btn.getBoundingClientRect();
+
+            menu.style.top = `${rect.top + (rect.height / 2) - 16}px`;
+            menu.style.left = `${rect.left - 135}px`;
+
+            menu.classList.remove('hidden');
         }
+    }
 
-        const menu = document.getElementById(boton.dataset.menuToggle);
-        const estabaAbierto = !menu.classList.contains('hidden');
+    const tabla_body = document.getElementById('tabla_body');
 
-        cerrarMenus();
-        if (estabaAbierto) return;
-
-        menu.classList.remove('hidden');
-
-        const rect = boton.getBoundingClientRect();
-        const menuAncho = menu.offsetWidth;
-        const menuAlto = menu.offsetHeight;
-
-        let top = rect.bottom + 4;
-        if (top + menuAlto > window.innerHeight) {
-            top = rect.top - menuAlto - 4; 
-        }
-        const left = Math.max(8, rect.right - menuAncho); 
-
-        menu.style.top = `${top}px`;
-        menu.style.left = `${left}px`;
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.action-menu').forEach(m => m.classList.add('hidden'));
     });
 
-    window.addEventListener('scroll', () => cerrarMenus(), true);
-    window.addEventListener('resize', () => cerrarMenus());
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') cerrarMenus();
+    tabla_body.addEventListener('scroll', () => {
+        document.querySelectorAll('.action-menu').forEach(m => m.classList.add('hidden'));
     });
+
+
 </script>
