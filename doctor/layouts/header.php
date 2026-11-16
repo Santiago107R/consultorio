@@ -34,8 +34,8 @@
 
                <nav>
                 <ul class="flex flex-row gap-2">
-                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>doctor/index.php">Inicio</a></li>
-                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>doctor/agenda.php">Agenda</a></li>
+                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>doctor/index.php">Turnos</a></li>
+                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>doctor/agendaEspecialidad.php">Agenda</a></li>
                     </ul>
             </nav>
         </div>    
