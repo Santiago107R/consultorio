@@ -3,8 +3,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/consultorio/config/parameters.php';
 require_once __DIR__ . '/../config/conexion.php';
 
 $resultadoDoctores = $conexion->query(
-    'SELECT usuario.nombre AS nombre, usuario.email AS email, 
-            agenda.dia AS dia, agenda.hora_inicio AS hora_inicio, doctor.id AS id
+    'SELECT usuario.nombre AS nombre, usuario.email AS email,
+        doctor.usuario_id AS usuario_id,
+        agenda.dia AS dia, agenda.hora_inicio AS hora_inicio, doctor.id AS id
     FROM doctores AS doctor
     LEFT JOIN usuarios AS usuario ON usuario.id = doctor.usuario_id
     LEFT JOIN agenda_fija AS agenda ON agenda.doctor_id = doctor.id
