@@ -5,7 +5,7 @@ require_once __DIR__ . '/../config/conexion.php';
 $resultadoPacientes = $conexion->query(
     'SELECT usuario.nombre AS nombre, cobertura.nombre AS cobertura, paciente.dni AS dni
     FROM pacientes AS paciente
-    LEFT JOIN usuarios AS usuario ON usuario.id = paciente.usuario_id
+    INNER JOIN usuarios AS usuario ON usuario.id = paciente.usuario_id
     LEFT JOIN coberturas_medica AS cobertura ON cobertura.id = paciente.cobertura_id
     ORDER BY paciente.id ASC'
 );

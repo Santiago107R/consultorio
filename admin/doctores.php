@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/conexion.php';
 
 $resultadoDoctores = $conexion->query(
     'SELECT usuario.nombre AS nombre, usuario.email AS email, 
-            agenda.dia AS dia, agenda.hora_inicio AS hora_inicio, agenda.hora_fin AS hora_fin, doctor.id AS id
+            agenda.dia AS dia, agenda.hora_inicio AS hora_inicio, doctor.id AS id
     FROM doctores AS doctor
     LEFT JOIN usuarios AS usuario ON usuario.id = doctor.usuario_id
     LEFT JOIN agenda_fija AS agenda ON agenda.doctor_id = doctor.id
@@ -47,7 +47,7 @@ $resultadoDoctores = $conexion->query(
                                     7 => 'Domingo'
                                 ];
                                 $nombreDia = $diasSemana[$doctor['dia']] ?? 'Día ' . $doctor['dia'];
-                                echo $nombreDia . ': ' . substr($doctor['hora_inicio'], 0, 5) . ' - ' . substr($doctor['hora_fin'], 0, 5);
+                                echo $nombreDia . ': ' . substr($doctor['hora_inicio'], 0, 5);
                             } else {
                                 echo 'Sin agenda';
                             }
