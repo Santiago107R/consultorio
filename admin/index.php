@@ -3,10 +3,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/consultorio/config/parameters.php';
 require_once __DIR__ . '/../config/conexion.php';
 
 $resultadoPacientes = $conexion->query(
-    'SELECT usuario.nombre AS nombre, cobertura.nombre AS cobertura, paciente.dni AS dni
+    'SELECT usuario.nombre AS nombre, paciente.dni AS dni
     FROM pacientes AS paciente
     INNER JOIN usuarios AS usuario ON usuario.id = paciente.usuario_id
-    LEFT JOIN coberturas_medica AS cobertura ON cobertura.id = paciente.cobertura_id
     ORDER BY paciente.id ASC'
 );
 ?>
@@ -22,7 +21,6 @@ $resultadoPacientes = $conexion->query(
         <thead class="grid bg-gray-50 uppercase text-xs font-bold text-gray-600 border-b border-gray-200">
             <tr class="grid grid-flow-col auto-cols-fr">
                 <th class="p-3">nombre</th>
-                <th class="p-3">cobertura</th>
                 <th class="p-3">dni</th>
                 <th class="p-3 whitespace-nowrap">historia clínica</th>
                 <th class="p-3 whitespace-nowrap">acciones</th>
@@ -33,7 +31,6 @@ $resultadoPacientes = $conexion->query(
             <?php while ($paciente = $resultadoPacientes->fetch_assoc()): ?>
                 <tr class="grid grid-flow-col auto-cols-fr hover:bg-gray-50 transition-colors">
                     <td class="p-3 text-gray-700"><?= htmlspecialchars($paciente['nombre'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
-                    <td class="p-3 text-gray-700"><?= htmlspecialchars($paciente['cobertura'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
                     <td class="p-3 text-gray-700"><?= htmlspecialchars($paciente['dni'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
                     <td class="p-3 text-gray-700"><button>Abrir</button></td>
                     <td class="p-3 text-gray-700">

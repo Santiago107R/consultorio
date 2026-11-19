@@ -52,24 +52,6 @@ INSERT INTO `agenda_fija` (`id`, `doctor_id`, `especialidad_id`, `dia`, `hora_in
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `coberturas_medica`
---
-
-CREATE TABLE `coberturas_medica` (
-  `id` int(11) NOT NULL,
-  `nombre` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `coberturas_medica`
---
-
-INSERT INTO `coberturas_medica` (`id`, `nombre`) VALUES
-(1, 'Osuthgra');
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `consultorios`
 --
 
@@ -202,7 +184,6 @@ INSERT INTO `estados` (`id`, `nombre`) VALUES
 CREATE TABLE `pacientes` (
   `id` int(11) NOT NULL,
   `usuario_id` int(11) NOT NULL,
-  `cobertura_id` int(11) DEFAULT NULL,
   `dni` varchar(100) NOT NULL,
   `historia_clinica` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -211,23 +192,11 @@ CREATE TABLE `pacientes` (
 -- Volcado de datos para la tabla `pacientes`
 --
 
-INSERT INTO `pacientes` (`id`, `usuario_id`, `cobertura_id`, `dni`, `historia_clinica`) VALUES
-(2, 4, 1, '48640915', NULL),
-(3, 5, NULL, '11876454', 'tiene cancer\nhoy 20/11/2026 se lesionó en la rodilla\nperdió un brazo'),
-(4, 9, NULL, '40657541', NULL),
-(5, 10, NULL, '11078532', NULL);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `planes`
---
-
-CREATE TABLE `planes` (
-  `id` int(11) NOT NULL,
-  `nombre` varchar(255) NOT NULL,
-  `cobertura_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `pacientes` (`id`, `usuario_id`, `dni`, `historia_clinica`) VALUES
+(2, 4, '48640915', NULL),
+(3, 5, '11876454', 'tiene cancer\nhoy 20/11/2026 se lesionó en la rodilla\nperdió un brazo'),
+(4, 9, '40657541', NULL),
+(5, 10, '11078532', NULL);
 
 -- --------------------------------------------------------
 
@@ -367,12 +336,6 @@ ALTER TABLE `agenda_fija`
   ADD KEY `especialidad_id` (`especialidad_id`);
 
 --
--- Indices de la tabla `coberturas_medica`
---
-ALTER TABLE `coberturas_medica`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indices de la tabla `consultorios`
 --
 ALTER TABLE `consultorios`
@@ -410,15 +373,7 @@ ALTER TABLE `estados`
 --
 ALTER TABLE `pacientes`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `usuario_id` (`usuario_id`),
-  ADD KEY `cobertura_id` (`cobertura_id`);
-
---
--- Indices de la tabla `planes`
---
-ALTER TABLE `planes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `cobertura_id` (`cobertura_id`);
+  ADD KEY `usuario_id` (`usuario_id`);
 
 --
 -- Indices de la tabla `servicios`
@@ -468,12 +423,6 @@ ALTER TABLE `agenda_fija`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT de la tabla `coberturas_medica`
---
-ALTER TABLE `coberturas_medica`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT de la tabla `consultorios`
 --
 ALTER TABLE `consultorios`
@@ -508,12 +457,6 @@ ALTER TABLE `estados`
 --
 ALTER TABLE `pacientes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT de la tabla `planes`
---
-ALTER TABLE `planes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `servicios`
@@ -567,14 +510,7 @@ ALTER TABLE `doctor_especialidad`
 -- Filtros para la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  ADD CONSTRAINT `fk_pacientes_cobertura` FOREIGN KEY (`cobertura_id`) REFERENCES `coberturas_medica` (`id`),
   ADD CONSTRAINT `fk_pacientes_usuarios` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `planes`
---
-ALTER TABLE `planes`
-  ADD CONSTRAINT `fk_planes_cobertura` FOREIGN KEY (`cobertura_id`) REFERENCES `coberturas_medica` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `turnos`

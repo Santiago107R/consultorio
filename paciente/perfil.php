@@ -9,7 +9,7 @@
 
     $idPaciente = $_SESSION['usuario']['paciente_id'];
 
-    $query = "SELECT p.id, u.nombre AS nombre, p.dni, p.historia_clinica, c.nombre AS cobertura FROM pacientes AS p INNER JOIN usuarios AS u ON u.id = p.usuario_id LEFT JOIN coberturas_medica AS c ON c.id = p.cobertura_id WHERE p.id = ?";
+    $query = "SELECT p.id, u.nombre AS nombre, p.dni, p.historia_clinica FROM pacientes AS p INNER JOIN usuarios AS u ON u.id = p.usuario_id WHERE p.id = ?";
     $stmt = $conexion->prepare($query);
     $stmt->bind_param('i', $idPaciente);
     $stmt->execute();
@@ -31,10 +31,6 @@
             <span>
                 <span class="font-medium text-gray-500">DNI:</span>
                 <?= htmlspecialchars($paciente['dni']); ?>
-            </span>
-            <span>
-                <span class="font-medium text-gray-500">Cobertura:</span>
-                <?= $hayHistoria ? htmlspecialchars($paciente['cobertura']) : 'Sin cobertura' ?>
             </span>
         </div>
 

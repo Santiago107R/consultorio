@@ -1,43 +1,45 @@
 <?php
-    require_once './layouts/header.php'; 
-    require_once __DIR__ . '/../config/conexion.php';
+require_once './layouts/header.php';
+require_once __DIR__ . '/../config/conexion.php';
 
-    $agendas = [];
+$agendas = [];
+$practica_nombre = '';
 
-    if (!empty($_GET['practica_id']) && !empty($_GET['practica_nombre']) && !empty($_GET['tipo_practica'])) {
-        $practica_id = $_GET['practica_id'];
-        $practica_nombre = $_GET['practica_nombre'];
-        $tipo_practica = $_GET['tipo_practica'];
+if (!empty($_GET['practica_id']) && !empty($_GET['practica_nombre']) && !empty($_GET['tipo_practica'])) {
+    $practica_id     = (int) $_GET['practica_id'];
+    $practica_nombre = $_GET['practica_nombre'];
+    $tipo_practica   = $_GET['tipo_practica'];
 
-        if ($tipo_practica == "servicio") {
-            $query = "SELECT dias_laborables, hora_inicio FROM servicios WHERE id = ?";
-            $stmt = $conexion->prepare($query);
-            $stmt->bind_param('i', $practica_id);
-            $stmt->execute(); 
-            $resultado = $stmt->get_result();
-            
-            if ($fila = $resultado->fetch_assoc()) {
-                $dias = explode(',', $fila['dias_laborables']);
-                foreach($dias as $dia) {
-                    $agendas[(int)$dia] = $fila['hora_inicio'];
-                }
+    if ($tipo_practica === "servicio") {
+        $query = "SELECT dias_laborables, hora_inicio FROM servicios WHERE id = ?";
+        $stmt = $conexion->prepare($query);
+        $stmt->bind_param('i', $practica_id);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        if ($fila = $resultado->fetch_assoc()) {
+            $dias = explode(',', $fila['dias_laborables']);
+            foreach ($dias as $dia) {
+                $agendas[(int) $dia] = $fila['hora_inicio'];
             }
-            $stmt->close();
-
-        } elseif ($tipo_practica == "especialidad" && !empty($_GET['doctor_id'])) {
-            $doctor_id = $_GET['doctor_id'];
-            $query = "SELECT dia, hora_inicio FROM agenda_fija WHERE doctor_id = ?";
-            $stmt = $conexion->prepare($query);
-            $stmt->bind_param('i', $doctor_id);
-            $stmt->execute(); 
-            $resultado = $stmt->get_result();
-            
-            while ($fila = $resultado->fetch_assoc()) {
-                $agendas[(int)$fila['dia']] = $fila['hora_inicio'];
-            }
-            $stmt->close();
         }
+        $stmt->close();
+
+    } elseif ($tipo_practica === "especialidad" && !empty($_GET['doctor_id'])) {
+        $doctor_id = (int) $_GET['doctor_id'];
+        $query = "SELECT dia, hora_inicio FROM agenda_fija WHERE doctor_id = ? AND especialidad_id = ?";
+        $stmt = $conexion->prepare($query);
+        $stmt->bind_param('ii', $doctor_id, $practica_id);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        while ($fila = $resultado->fetch_assoc()) {
+            $diaJs = ((int) $fila['dia'] + 1) % 7;
+            $agendas[$diaJs] = $fila['hora_inicio'];
+        }
+        $stmt->close();
     }
+}
 ?>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -46,18 +48,25 @@
 <main class="w-4/5 text-(--color-paciente-text) mx-auto space-y-8 p-5 text-sm font-medium">
     <div class="w-full flex flex-col items-center justify-center space-y-4">
         <h2 class="text-base text-gray-800 border-b border-border">Sacar nuevo turno</h2>
-        
+
         <form action="confirmarTurno.php" method="POST" class="w-[40%] flex flex-col items-center bg-white border border-neutral-100 shadow-md rounded-lg p-6">
-            
+
             <div class="flex flex-col w-full text-center space-y-4">
-                <label class="text-gray-800 font-semibold">Elige una fecha para: <?= htmlspecialchars($practica_nombre); ?></label>
-                
+
+                <?php if (!empty($_GET['error'])): ?>
+                    <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-xs text-red-600">
+                        <?= htmlspecialchars($_GET['error']) ?>
+                    </div>
+                <?php endif; ?>
+
+                <label class="text-gray-800 font-semibold">Elige una fecha para: <?= htmlspecialchars($practica_nombre) ?></label>
+
                 <?php if (empty($agendas)): ?>
                     <div class="p-4 text-red-500 bg-red-50 rounded-lg border border-red-200">
                         <span>Este profesional/servicio no tiene horarios disponibles actualmente.</span>
                     </div>
                 <?php else: ?>
-                    
+
                     <div class="w-full flex justify-center">
                         <input type="date" name="fecha_turno" id="calendario" class="hidden" required>
                     </div>
@@ -67,17 +76,17 @@
                         </div>
                     </div>
 
-                    <input type="time" name="hora_turno" id="hora_turno" required>
+                    <input type="hidden" name="hora_turno" id="hora_turno" required>
 
                 <?php endif; ?>
             </div>
 
-            <?php if(!empty($_GET['practica_id'])): ?>
-                <input type="hidden" name="practica_id" value="<?= htmlspecialchars($_GET['practica_id']); ?>">
-                <input type="hidden" name="practica_nombre" value="<?= htmlspecialchars($_GET['practica_nombre']); ?>">
-                <input type="hidden" name="tipo_practica" value="<?= htmlspecialchars($_GET['tipo_practica']); ?>">
-                <?php if(!empty($_GET['doctor_id'])): ?>
-                    <input type="hidden" name="doctor_id" value="<?= htmlspecialchars($_GET['doctor_id']); ?>">
+            <?php if (!empty($_GET['practica_id'])): ?>
+                <input type="hidden" name="practica_id" value="<?= htmlspecialchars($_GET['practica_id']) ?>">
+                <input type="hidden" name="practica_nombre" value="<?= htmlspecialchars($_GET['practica_nombre'] ?? '') ?>">
+                <input type="hidden" name="tipo_practica" value="<?= htmlspecialchars($_GET['tipo_practica'] ?? '') ?>">
+                <?php if (!empty($_GET['doctor_id'])): ?>
+                    <input type="hidden" name="doctor_id" value="<?= htmlspecialchars($_GET['doctor_id']) ?>">
                 <?php endif; ?>
             <?php endif; ?>
 
@@ -92,7 +101,7 @@
 <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
 
 <script>
-    const agendas = <?php echo json_encode($agendas); ?>;
+    const agendas = <?= json_encode($agendas) ?>;
     const diasPermitidos = Object.keys(agendas).map(Number);
 
     const contenedorHorarios = document.getElementById('contenedor-horarios');
@@ -100,28 +109,39 @@
     const inputHora = document.getElementById('hora_turno');
     const btnContinuar = document.getElementById('btn-continuar');
 
+    function horaYaPaso(fecha) {
+        const ahora = new Date();
+        if (fecha.toDateString() !== ahora.toDateString()) return false;
+
+        const hora = agendas[fecha.getDay()];
+        if (!hora) return true;
+
+        const [h, m] = hora.split(':').map(Number);
+        const limite = new Date();
+        limite.setHours(h, m, 0, 0);
+        return ahora >= limite;
+    }
+
     if (diasPermitidos.length > 0) {
         flatpickr("#calendario", {
-            inline: true, 
-            locale: "es", 
+            inline: true,
+            locale: "es",
             minDate: "today",
             dateFormat: "Y-m-d",
             disable: [
-                function(date) {
-                    return !diasPermitidos.includes(date.getDay());
+                function (date) {
+                    return !diasPermitidos.includes(date.getDay()) || horaYaPaso(date);
                 }
             ],
-            onChange: function(selectedDates, dateStr, instance) {
-                const diaDeSemana = selectedDates[0].getDay();
-                const horaAsignada = agendas[diaDeSemana];
+            onChange: function (selectedDates) {
+                if (!selectedDates.length) return;
+
+                const horaAsignada = agendas[selectedDates[0].getDay()];
 
                 if (horaAsignada) {
-                    const horaLimpia = horaAsignada.substring(0, 5);
-                    
-                    mensajeHora.innerHTML = `Horario asignado: <b>${horaLimpia} hs</b>`;
-                    
-                    inputHora.value = horaAsignada; 
-                    
+                    mensajeHora.innerHTML = `Horario asignado: <b>${horaAsignada.substring(0, 5)} hs</b>`;
+                    inputHora.value = horaAsignada;
+
                     contenedorHorarios.classList.remove('hidden');
                     btnContinuar.classList.remove('hidden');
                 }

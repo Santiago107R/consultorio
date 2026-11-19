@@ -11,7 +11,9 @@ $resultadoSecretarios = $conexion->query(
 
     <div class="flex justify-between">
         <h2>Secretarios</h2>
-        <button class="bg-[#2196F3] font-semibold rounded-lg cursor-pointer text-white px-2">Crear</button>
+        <a href="crearSecretario.php">
+            <button class="bg-[#2196F3] font-semibold rounded-lg cursor-pointer text-white px-2">Crear</button>
+        </a>
     </div>
 
     <table class="grid grid-rows-[auto_1fr] max-h-[800px] overflow-hidden rounded-lg border border-gray-200 text-sm shadow-md text-center">

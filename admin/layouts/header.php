@@ -39,7 +39,6 @@
                     <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>admin/secretarios.php">Secretarios</a></li>
                     <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>admin/especialidades.php">Especialidades</a></li>
                     <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>admin/servicios.php">Servicios</a></li>
-                    <li class="list-none py-1 px-2 rounded-md text-sm hover:bg-(--color-paciente-primary) hover:text-(--color-paciente-white)"><a href="<?= base_url ?>admin/coberturas.php">Coberturas</a></li>
                     </ul>
             </nav>
         </div>    

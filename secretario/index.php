@@ -15,7 +15,6 @@
             t.hora,
             up.nombre                   AS paciente,
             p.dni,
-            cob.nombre                  AS cobertura,
             ud.nombre                   AS doctor,
             COALESCE(e.nombre, s.nombre) AS motivo,
             cons.nombre                 AS consultorio,
@@ -23,11 +22,10 @@
         FROM turnos AS t
         INNER JOIN pacientes  AS p   ON p.id   = t.paciente_id
         INNER JOIN usuarios  AS up  ON up.id  = p.usuario_id
-        LEFT  JOIN coberturas_medica AS cob ON cob.id = p.cobertura_id
         LEFT  JOIN especialidades    AS e   ON e.id   = t.especialidad_id
         LEFT  JOIN servicios         AS s   ON s.id   = t.servicio_id
-        INNER JOIN doctores    AS d   ON d.id   = t.doctor_id
-        INNER JOIN usuarios  AS ud  ON ud.id  = d.usuario_id
+        LEFT JOIN doctores    AS d   ON d.id   = t.doctor_id
+        LEFT JOIN usuarios  AS ud  ON ud.id  = d.usuario_id
         LEFT  JOIN consultorios      AS cons ON cons.id = t.consultorio_id
         INNER JOIN estados   AS es  ON es.id  = t.estado_id
     ";
@@ -81,7 +79,7 @@
             <thead class="sticky top-0 z-10">
                 <tr>
                     <th class="py-2 bg-slate-200 rounded-tl-lg">HORARIO / CONSULTORIO</th>
-                    <th class="py-2 bg-slate-200">PACIENTE & COBERTURA</th>
+                    <th class="py-2 bg-slate-200">PACIENTE</th>
                     <th class="py-2 bg-slate-200">PROFESIONAL & MOTIVO</th>
                     <th class="py-2 bg-slate-200">ESTADO</th>
                     <th class="py-2 bg-slate-200 rounded-tr-lg">ACCIÓN</th>
@@ -107,7 +105,6 @@
                             <div class="flex flex-col">
                                 <span><?= $turno['paciente'] ?></span>
                                 <span>DNI: <?= $turno['dni'] ?></span>
-                                <span><?= $turno['cobertura'] ?? 'Sin cobertura' ?></span>
                             </div>
                         </td>
                         <td class="px-3 bg-white group-hover:bg-slate-50 transition-colors border-b border-slate-100 group-last:border-b-0">
