@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-11-2026 a las 14:50:28
+-- Tiempo de generación: 19-11-2026 a las 16:33:03
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -47,7 +47,7 @@ INSERT INTO `agenda_fija` (`id`, `doctor_id`, `especialidad_id`, `dia`, `hora_in
 (5, 5, 3, '5', '13:00:00'),
 (6, 6, 7, '2', '09:00:00'),
 (7, 6, 7, '5', '10:00:00'),
-(9, 6, 7, '3', '09:30:00');
+(9, 6, 7, '3', '15:30:00');
 
 -- --------------------------------------------------------
 
@@ -90,7 +90,9 @@ INSERT INTO `doctores` (`id`, `usuario_id`) VALUES
 (3, 6),
 (4, 7),
 (5, 8),
-(6, 10);
+(6, 10),
+(7, 11),
+(8, 12);
 
 -- --------------------------------------------------------
 
@@ -112,7 +114,9 @@ INSERT INTO `doctor_especialidad` (`id`, `doctor_id`, `especialidad_id`) VALUES
 (1, 3, 1),
 (2, 4, 2),
 (3, 5, 3),
-(4, 6, 7);
+(4, 6, 7),
+(5, 8, 1),
+(6, 8, 3);
 
 -- --------------------------------------------------------
 
@@ -194,9 +198,8 @@ CREATE TABLE `pacientes` (
 
 INSERT INTO `pacientes` (`id`, `usuario_id`, `dni`, `historia_clinica`) VALUES
 (2, 4, '48640915', NULL),
-(3, 5, '11876454', 'tiene cancer\nhoy 20/11/2026 se lesionó en la rodilla\nperdió un brazo'),
-(4, 9, '40657541', NULL),
-(5, 10, '11078532', NULL);
+(3, 5, '11876454', 'tiene cancer\nhoy 20/11/2026 se lesionó en la rodilla\nperdió un brazo\nhoy 17/11/2026 perdió las piernas\nestá mejorando'),
+(4, 9, '40657541', NULL);
 
 -- --------------------------------------------------------
 
@@ -265,7 +268,6 @@ INSERT INTO `turnos` (`id`, `fecha`, `hora`, `paciente_id`, `especialidad_id`, `
 (3, '2026-11-10', '09:00:00', 3, 2, NULL, 4, 4, 7),
 (4, '2026-11-16', '08:00:00', 3, 1, NULL, 3, 4, 7),
 (6, '2026-11-11', '07:00:00', 3, NULL, 1, NULL, NULL, 1),
-(7, '2026-11-14', '10:00:00', 3, 7, NULL, 6, 1, 3),
 (8, '2026-11-24', '09:00:00', 3, 7, NULL, 6, 2, 7);
 
 -- --------------------------------------------------------
@@ -291,7 +293,8 @@ CREATE TABLE `turnos_historicos` (
 --
 
 INSERT INTO `turnos_historicos` (`id`, `fecha`, `hora`, `paciente_id`, `especialidad_id`, `servicio_id`, `doctor_id`, `consultorio_id`, `estado_id`) VALUES
-(1, '2026-11-11', '10:07:32', 3, 1, NULL, 3, NULL, 3);
+(1, '2026-11-11', '10:07:32', 3, 1, NULL, 3, NULL, 3),
+(2, '2026-11-19', '15:30:00', 3, 7, NULL, 6, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -320,7 +323,10 @@ INSERT INTO `usuarios` (`id`, `email`, `nombre`, `contrasena`, `rol`) VALUES
 (7, 'dra.gomez@clinica.com', 'Ana Gómez', '123456', 'doctor'),
 (8, 'dr.martinez@clinica.com', 'Luis Martínez', '123456', 'doctor'),
 (9, 'secretario@gmail.com', 'Charli kirck', '$2y$10$4HeJKW9zV6I2M3IBfXvCbezoW5INLkwXGkENirQRtKku1WcSbWtNq', 'secretario'),
-(10, 'doctor@gmail.com', 'Jefrey Epstein', '$2y$10$ELuZ22uSS/YWx0vqMcyDEuPt0LaUlAh1AqmjgMYUBXNWDdVYOt7TS', 'doctor');
+(10, 'doctor@gmail.com', 'Jefrey Epstein', '$2y$10$ELuZ22uSS/YWx0vqMcyDEuPt0LaUlAh1AqmjgMYUBXNWDdVYOt7TS', 'doctor'),
+(11, 'geronimo@gmail.com', 'Geronimo Benavidez', '$2y$10$tNjQOuyeOfxJA2Q5oAK6q.IE2GLBZ5LQbbte7om0rnHnwJJHJNkHS', 'paciente'),
+(12, 'eus@gmail.com', 'Eustaquio Sanchez', '$2y$10$qlXyVXdcc/4sLHz0fH.yx.Mm09LmDmIwlmy8RsSb1O6ByffKuyODm', 'doctor'),
+(13, 'lu@gmail.com', 'Luciano Costa', '$2y$10$aF4iwTQBMVQNf7elBx1CP.uhe5C7mM78s7klZ4n2fwWzEgPE2tCoS', 'secretario');
 
 --
 -- Índices para tablas volcadas
@@ -420,7 +426,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `agenda_fija`
 --
 ALTER TABLE `agenda_fija`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `consultorios`
@@ -432,13 +438,13 @@ ALTER TABLE `consultorios`
 -- AUTO_INCREMENT de la tabla `doctores`
 --
 ALTER TABLE `doctores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `doctor_especialidad`
 --
 ALTER TABLE `doctor_especialidad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `especialidades`
@@ -456,7 +462,7 @@ ALTER TABLE `estados`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `servicios`
@@ -468,19 +474,19 @@ ALTER TABLE `servicios`
 -- AUTO_INCREMENT de la tabla `turnos`
 --
 ALTER TABLE `turnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `turnos_historicos`
 --
 ALTER TABLE `turnos_historicos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Restricciones para tablas volcadas
