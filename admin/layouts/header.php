@@ -1,12 +1,4 @@
-<?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/consultorio/config/parameters.php';
-    
-    session_start();
-
-    if ( !isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== "admin") {
-        header('Location: ' . base_url);
-    }
-?>
+<?php require_once __DIR__ . '/auth.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 

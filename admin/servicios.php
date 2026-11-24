@@ -1,8 +1,12 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/consultorio/config/parameters.php';
+require_once __DIR__ . '/layouts/auth.php';
 require_once __DIR__ . '/../config/conexion.php';
 
-$resultadoServicios = $conexion->query('SELECT id, nombre FROM servicios ORDER BY id ASC');
+$resultadoServicios = $conexion->query(
+    'SELECT id, nombre, dias_laborables, hora_inicio, hora_fin
+     FROM servicios
+     ORDER BY id ASC'
+);
 ?>
 <?php require_once './layouts/header.php'; ?>
 
@@ -20,6 +24,20 @@ $resultadoServicios = $conexion->query('SELECT id, nombre FROM servicios ORDER B
             </button>
         </div>
 
+        <?php if (!empty($_GET['error'])): ?>
+            <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600" role="alert">
+                <?= htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8') ?>
+            </div>
+        <?php elseif (isset($_GET['eliminado'])): ?>
+            <div class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-700" role="status">
+                El servicio se eliminó correctamente.
+            </div>
+        <?php elseif (isset($_GET['actualizado'])): ?>
+            <div class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-700" role="status">
+                El servicio se actualizó correctamente.
+            </div>
+        <?php endif; ?>
+
         <div class="max-h-[800px] overflow-y-auto pr-1" id="tarjetas-container">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <?php if ($resultadoServicios->num_rows === 0): ?>
@@ -36,11 +54,19 @@ $resultadoServicios = $conexion->query('SELECT id, nombre FROM servicios ORDER B
                                         </button>
                                         <div id="menu-serv-<?= (int) $servicio['id'] ?>" class="action-menu fixed z-50 hidden w-36 rounded-md border border-gray-200 bg-white py-1 shadow-lg">
                                             <ul class="flex flex-col text-left text-xs font-medium">
-                                                <li class="flex cursor-pointer items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50">
-                                                    <ion-icon name="create-outline"></ion-icon> Editar
+                                                <li>
+                                                    <a href="editarServicio.php?id=<?= (int) $servicio['id'] ?>"
+                                                       class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50">
+                                                        <ion-icon name="create-outline"></ion-icon> Editar
+                                                    </a>
                                                 </li>
-                                                <li class="flex cursor-pointer items-center gap-2 text-red-600 border-t border-gray-100 px-4 py-2 hover:bg-red-50">
-                                                    <ion-icon name="trash-outline"></ion-icon> Eliminar
+                                                <li class="border-t border-gray-100">
+                                                    <button type="button"
+                                                            data-service-name="<?= htmlspecialchars($servicio['nombre'], ENT_QUOTES, 'UTF-8') ?>"
+                                                            onclick="abrirModalEliminar(<?= (int) $servicio['id'] ?>, this.dataset.serviceName)"
+                                                            class="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-red-600 hover:bg-red-50">
+                                                        <ion-icon name="trash-outline"></ion-icon> Eliminar
+                                                    </button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -50,6 +76,10 @@ $resultadoServicios = $conexion->query('SELECT id, nombre FROM servicios ORDER B
                                 <div class="mb-3 flex items-center gap-3">
                                     <div class="pl-10">
                                         <h3 class="text-base font-bold text-gray-800"><?= htmlspecialchars($servicio['nombre'], ENT_QUOTES, 'UTF-8') ?></h3>
+                                        <p class="mt-1 text-xs text-gray-500">
+                                            <?= htmlspecialchars(substr($servicio['hora_inicio'], 0, 5), ENT_QUOTES, 'UTF-8') ?>
+                                            – <?= htmlspecialchars(substr($servicio['hora_fin'], 0, 5), ENT_QUOTES, 'UTF-8') ?>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -61,6 +91,28 @@ $resultadoServicios = $conexion->query('SELECT id, nombre FROM servicios ORDER B
     </div>
 
 </main>
+
+<div id="modal-eliminar-servicio" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
+    <div class="w-full max-w-sm rounded-2xl border border-gray-100 bg-white p-6 shadow-xl">
+        <h3 class="text-base font-semibold text-gray-800">Eliminar servicio</h3>
+        <p class="mt-2 text-sm text-gray-500">
+            ¿Seguro que querés eliminar <span id="nombre-servicio-eliminar" class="font-semibold text-gray-800"></span>?
+            Los servicios con turnos actuales o históricos asociados no se pueden eliminar.
+        </p>
+
+        <form action="eliminarServicio.php" method="POST" class="mt-5 flex justify-end gap-2 text-sm">
+            <input type="hidden" name="id" id="id-servicio-eliminar">
+            <button type="button" onclick="cerrarModalEliminar()"
+                    class="cursor-pointer rounded-lg border border-gray-300 px-4 py-1.5 text-gray-600 hover:bg-gray-50">
+                Cancelar
+            </button>
+            <button type="submit"
+                    class="cursor-pointer rounded-lg bg-red-600 px-4 py-1.5 font-semibold text-white hover:bg-red-700">
+                Eliminar
+            </button>
+        </form>
+    </div>
+</div>
 
 <script>
     function toggleMenu(event, menuId) {
@@ -80,6 +132,21 @@ $resultadoServicios = $conexion->query('SELECT id, nombre FROM servicios ORDER B
 
             menu.classList.remove('hidden');
         }
+    }
+
+    function abrirModalEliminar(id, nombre) {
+        document.querySelectorAll('.action-menu').forEach(menu => menu.classList.add('hidden'));
+        document.getElementById('id-servicio-eliminar').value = id;
+        document.getElementById('nombre-servicio-eliminar').textContent = nombre;
+        const modal = document.getElementById('modal-eliminar-servicio');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function cerrarModalEliminar() {
+        const modal = document.getElementById('modal-eliminar-servicio');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
     }
 
     document.addEventListener('click', () => {

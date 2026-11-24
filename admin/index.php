@@ -1,9 +1,10 @@
 <?php
+require_once __DIR__ . '/layouts/auth.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/consultorio/config/parameters.php';
 require_once __DIR__ . '/../config/conexion.php';
 
 $resultadoPacientes = $conexion->query(
-    'SELECT usuario.nombre AS nombre, paciente.dni AS dni
+    'SELECT paciente.id AS paciente_id, usuario.nombre AS nombre, paciente.dni AS dni
     FROM pacientes AS paciente
     INNER JOIN usuarios AS usuario ON usuario.id = paciente.usuario_id
     ORDER BY paciente.id ASC'
@@ -14,8 +15,17 @@ $resultadoPacientes = $conexion->query(
 
     <div class="flex justify-between">
         <h2>Pacientes</h2>
-        <button class="bg-[#2196F3] font-semibold rounded-lg cursor-pointer text-white px-2">Crear</button>
     </div>
+
+    <?php if (isset($_GET['actualizado'])): ?>
+        <p class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-700" role="status">
+            Los datos del paciente se actualizaron correctamente.
+        </p>
+    <?php elseif (!empty($_GET['error'])): ?>
+        <p class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600" role="alert">
+            <?= htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8') ?>
+        </p>
+    <?php endif; ?>
 
     <table class="grid grid-rows-[auto_1fr] max-h-[800px] overflow-hidden rounded-lg border border-gray-200 text-sm shadow-md text-center">
         <thead class="grid bg-gray-50 uppercase text-xs font-bold text-gray-600 border-b border-gray-200">
@@ -27,66 +37,28 @@ $resultadoPacientes = $conexion->query(
             </tr>
         </thead>
         <tbody id="tabla_body" class="grid overflow-y-auto divide-y divide-gray-100">
-            <?php $indicePaciente = 0; ?>
             <?php while ($paciente = $resultadoPacientes->fetch_assoc()): ?>
                 <tr class="grid grid-flow-col auto-cols-fr hover:bg-gray-50 transition-colors">
                     <td class="p-3 text-gray-700"><?= htmlspecialchars($paciente['nombre'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
                     <td class="p-3 text-gray-700"><?= htmlspecialchars($paciente['dni'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
-                    <td class="p-3 text-gray-700"><button>Abrir</button></td>
                     <td class="p-3 text-gray-700">
-                        <div class="relative flex items-center justify-center">
-                            <button onclick="toggleMenu(event, 'menu-<?= $indicePaciente ?>')" class="cursor-pointer p-1 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-center">
-                                <ion-icon name="ellipsis-vertical-outline" class="pointer-events-none"></ion-icon>
-                            </button>
-                            <div id="menu-<?= $indicePaciente ?>" class="action-menu hidden fixed z-50 bg-white rounded-md shadow-lg border border-gray-200 w-32 py-1">
-                                <ul class="flex flex-col text-left">
-                                    <li class="list-none px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">Turnos</li>
-                                    <li class="list-none px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">Editar</li>
-                                    <li class="list-none px-4 py-2 hover:bg-red-50 text-red-600 cursor-pointer text-sm">Eliminar</li>
-                                </ul>
-                            </div>
-                        </div>
+                        <a href="historiaClinica.php?id=<?= (int) $paciente['paciente_id'] ?>"
+                           class="text-(--color-paciente-primary) hover:underline">
+                            Abrir
+                        </a>
+                    </td>
+                    <td class="p-3 text-gray-700">
+                        <a href="editarPaciente.php?id=<?= (int) $paciente['paciente_id'] ?>"
+                           class="text-(--color-paciente-primary) hover:underline">
+                            Editar
+                        </a>
                     </td>
                 </tr>
-                <?php $indicePaciente++; ?>
             <?php endwhile; ?>
         </tbody>
     </table>
 
 </main>
-
-<script>
-    function toggleMenu(event, menuId) {
-        event.stopPropagation();
-
-        const menu = document.getElementById(menuId);
-        const isCurrentlyHidden = menu.classList.contains('hidden');
-
-        document.querySelectorAll('.action-menu').forEach(m => m.classList.add('hidden'));
-
-        if (isCurrentlyHidden) {
-            const btn = event.currentTarget;
-            const rect = btn.getBoundingClientRect();
-
-            menu.style.top = `${rect.top + (rect.height / 2) - 16}px`;
-            menu.style.left = `${rect.left - 135}px`;
-
-            menu.classList.remove('hidden');
-        }
-    }
-
-    const tabla_body = document.getElementById('tabla_body');
-
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.action-menu').forEach(m => m.classList.add('hidden'));
-    });
-
-    tabla_body.addEventListener('scroll', () => {
-        document.querySelectorAll('.action-menu').forEach(m => m.classList.add('hidden'));
-    });
-
-
-</script>
 </body>
 
 </html>
