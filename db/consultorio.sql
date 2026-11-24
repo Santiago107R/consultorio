@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-11-2026 a las 16:33:03
+-- Tiempo de generación: 24-11-2026 a las 20:34:17
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -315,7 +315,6 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `email`, `nombre`, `contrasena`, `rol`) VALUES
-(2, 'santiagorobles107k@gmail.com', 'Santiago', '$2y$10$ZB5vx9mB.UyulpQYxoBz1.fkpA20LBXdXL356RHkpiJAy8l3vZSYO', 'admin'),
 (3, 'eze@gmail.com', 'Ezequiel', '$2y$10$/7laXhW2ncFc7d0w7weVQ.vSGX3J3jmQBZnkjO3iBkKTWtUVCcgLG', 'admin'),
 (4, 'arturo@gmail.com', 'Arturo', '$2y$10$8pkQhr8CXtobw9Tyh1ojpucvUMcpVMWmHnyacGijTYDSPHRFJbeA2', 'admin'),
 (5, 'pepe@gmail.com', 'Pepe', '$2y$10$/w9dMR0IjIXxygmVwOQsyutN2YK71rmrnFN6KEuO28hF7i5tVqp3a', 'paciente'),
@@ -326,7 +325,8 @@ INSERT INTO `usuarios` (`id`, `email`, `nombre`, `contrasena`, `rol`) VALUES
 (10, 'doctor@gmail.com', 'Jefrey Epstein', '$2y$10$ELuZ22uSS/YWx0vqMcyDEuPt0LaUlAh1AqmjgMYUBXNWDdVYOt7TS', 'doctor'),
 (11, 'geronimo@gmail.com', 'Geronimo Benavidez', '$2y$10$tNjQOuyeOfxJA2Q5oAK6q.IE2GLBZ5LQbbte7om0rnHnwJJHJNkHS', 'paciente'),
 (12, 'eus@gmail.com', 'Eustaquio Sanchez', '$2y$10$qlXyVXdcc/4sLHz0fH.yx.Mm09LmDmIwlmy8RsSb1O6ByffKuyODm', 'doctor'),
-(13, 'lu@gmail.com', 'Luciano Costa', '$2y$10$aF4iwTQBMVQNf7elBx1CP.uhe5C7mM78s7klZ4n2fwWzEgPE2tCoS', 'secretario');
+(13, 'lu@gmail.com', 'Luciano Costa', '$2y$10$aF4iwTQBMVQNf7elBx1CP.uhe5C7mM78s7klZ4n2fwWzEgPE2tCoS', 'secretario'),
+(14, 'admin@gmail.com', 'Admin', '$2y$10$zJYef/P6106W5FSP9IT/xODnBR9dGQiVbYoiQawdc9NyUyXYLByTe', 'admin');
 
 --
 -- Índices para tablas volcadas
@@ -444,7 +444,7 @@ ALTER TABLE `doctores`
 -- AUTO_INCREMENT de la tabla `doctor_especialidad`
 --
 ALTER TABLE `doctor_especialidad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `especialidades`
@@ -462,7 +462,7 @@ ALTER TABLE `estados`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `servicios`
@@ -486,7 +486,7 @@ ALTER TABLE `turnos_historicos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restricciones para tablas volcadas

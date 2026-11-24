@@ -9,93 +9,91 @@ $resultadoServicios = $conexion->query(
 );
 ?>
 <?php require_once './layouts/header.php'; ?>
+<main class="w-4/5 mx-auto grid grid-cols-1 gap-5 mt-2 p-5">
 
-<main class="w-4/5 mx-auto grid grid-cols-1 gap-6 mt-4 p-5">
+    <div class="flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-800">Servicios</h2>
+        <a href="crearServicio.php">
+            <button class="bg-[#2196F3] font-semibold rounded-lg cursor-pointer text-white px-2">Crear</button>
+        </a>
+    </div>
 
-    <div class="space-y-4">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-md font-bold text-gray-800">Servicios</h2>
-                <p class="text-xs text-gray-500">Gestión de los servicios que ofrece el consultorio</p>
-            </div>
-            <button class="bg-[#0D47A1] hover:bg-[#1976D2] font-semibold rounded-lg text-white text-sm px-4 py-2 transition-all duration-200 shadow-sm cursor-pointer flex items-center gap-1">
-                <ion-icon name="add-outline" class="text-lg"></ion-icon>
-                <span>Nuevo Servicio</span>
-            </button>
+    <?php if (!empty($_GET['error'])): ?>
+        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-xs text-red-600" role="alert">
+            <?= htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8') ?>
         </div>
+    <?php elseif (isset($_GET['eliminado'])): ?>
+        <div class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-xs text-green-700" role="status">
+            El servicio se eliminó correctamente.
+        </div>
+    <?php elseif (isset($_GET['actualizado'])): ?>
+        <div class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-xs text-green-700" role="status">
+            El servicio se actualizó correctamente.
+        </div>
+    <?php elseif (isset($_GET['creado'])): ?>
+        <div class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-xs text-green-700" role="status">
+            El servicio se creó correctamente.
+        </div>
+    <?php endif; ?>
 
-        <?php if (!empty($_GET['error'])): ?>
-            <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600" role="alert">
-                <?= htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8') ?>
-            </div>
-        <?php elseif (isset($_GET['eliminado'])): ?>
-            <div class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-700" role="status">
-                El servicio se eliminó correctamente.
-            </div>
-        <?php elseif (isset($_GET['actualizado'])): ?>
-            <div class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-700" role="status">
-                El servicio se actualizó correctamente.
-            </div>
-        <?php endif; ?>
-
-        <div class="max-h-[800px] overflow-y-auto pr-1" id="tarjetas-container">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <?php if ($resultadoServicios->num_rows === 0): ?>
-                    <p class="text-xs text-gray-500">Todavía no hay servicios cargados.</p>
-                <?php else: ?>
-                    <?php while ($servicio = $resultadoServicios->fetch_assoc()): ?>
-                        <div class="relative flex flex-col justify-between overflow-hidden rounded-xl border border-gray-200 bg-white p-2 pl-5 shadow-sm transition-all hover:shadow-md before:absolute before:left-0 before:right-0 before:top-0 before:h-13 before:bg-[#0D47A1]">
-                            <div>
-                                <div class="relative z-10 mb-6 flex items-center justify-between">
-                                    <span class="text-xs font-semibold text-white/90">#<?= (int) $servicio['id'] ?></span>
-                                    <div class="relative">
-                                        <button onclick="toggleMenu(event, 'menu-serv-<?= (int) $servicio['id'] ?>')" class="cursor-pointer rounded-full p-1.5 text-white transition-colors hover:bg-white/20">
-                                            <ion-icon name="ellipsis-vertical-outline" class="pointer-events-none text-base"></ion-icon>
-                                        </button>
-                                        <div id="menu-serv-<?= (int) $servicio['id'] ?>" class="action-menu fixed z-50 hidden w-36 rounded-md border border-gray-200 bg-white py-1 shadow-lg">
-                                            <ul class="flex flex-col text-left text-xs font-medium">
-                                                <li>
-                                                    <a href="editarServicio.php?id=<?= (int) $servicio['id'] ?>"
-                                                       class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50">
-                                                        <ion-icon name="create-outline"></ion-icon> Editar
-                                                    </a>
-                                                </li>
-                                                <li class="border-t border-gray-100">
-                                                    <button type="button"
-                                                            data-service-name="<?= htmlspecialchars($servicio['nombre'], ENT_QUOTES, 'UTF-8') ?>"
-                                                            onclick="abrirModalEliminar(<?= (int) $servicio['id'] ?>, this.dataset.serviceName)"
-                                                            class="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-red-600 hover:bg-red-50">
-                                                        <ion-icon name="trash-outline"></ion-icon> Eliminar
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3 flex items-center gap-3">
-                                    <div class="pl-10">
-                                        <h3 class="text-base font-bold text-gray-800"><?= htmlspecialchars($servicio['nombre'], ENT_QUOTES, 'UTF-8') ?></h3>
-                                        <p class="mt-1 text-xs text-gray-500">
-                                            <?= htmlspecialchars(substr($servicio['hora_inicio'], 0, 5), ENT_QUOTES, 'UTF-8') ?>
-                                            – <?= htmlspecialchars(substr($servicio['hora_fin'], 0, 5), ENT_QUOTES, 'UTF-8') ?>
-                                        </p>
-                                    </div>
+    <table class="grid grid-rows-[auto_1fr] max-h-[800px] overflow-hidden rounded-lg border border-gray-200 text-sm shadow-md text-center">
+        <thead class="grid bg-gray-50 uppercase text-xs font-bold text-gray-600 border-b border-gray-200">
+            <tr class="grid grid-flow-col auto-cols-fr">
+                <th class="p-3">Nombre</th>
+                <th class="p-3">Horario</th>
+                <th class="p-3 whitespace-nowrap">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tabla_body" class="grid overflow-y-auto divide-y divide-gray-100">
+            <?php if ($resultadoServicios->num_rows === 0): ?>
+                <tr class="grid">
+                    <td class="p-3 text-xs text-gray-500">Todavía no hay servicios cargados.</td>
+                </tr>
+            <?php else: ?>
+                <?php while ($servicio = $resultadoServicios->fetch_assoc()): ?>
+                    <?php $idServ = (int) $servicio['id']; ?>
+                    <tr class="grid grid-flow-col auto-cols-fr hover:bg-gray-50 transition-colors items-center">
+                        <td class="p-3 text-gray-700 font-medium"><?= htmlspecialchars($servicio['nombre'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
+                        <td class="p-3 text-gray-700">
+                            <?= htmlspecialchars(substr($servicio['hora_inicio'], 0, 5), ENT_QUOTES, 'UTF-8') ?>
+                            – <?= htmlspecialchars(substr($servicio['hora_fin'], 0, 5), ENT_QUOTES, 'UTF-8') ?>
+                        </td>
+                        <td class="p-3 text-gray-700">
+                            <div class="relative flex items-center justify-center">
+                                <button onclick="toggleMenu(event, 'menu-serv-<?= $idServ ?>')" class="cursor-pointer p-1 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-center">
+                                    <ion-icon name="ellipsis-vertical-outline" class="pointer-events-none"></ion-icon>
+                                </button>
+                                <div id="menu-serv-<?= $idServ ?>" class="action-menu hidden fixed z-50 bg-white rounded-md shadow-lg border border-gray-200 w-32 py-1">
+                                    <ul class="flex flex-col text-left">
+                                        <li>
+                                            <a href="editarServicio.php?id=<?= $idServ ?>" class="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">
+                                                Editar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <button type="button"
+                                                    data-service-name="<?= htmlspecialchars($servicio['nombre'] ?? 'este servicio', ENT_QUOTES, 'UTF-8') ?>"
+                                                    onclick="abrirModalEliminar(<?= $idServ ?>, this.dataset.serviceName)"
+                                                    class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600 cursor-pointer text-sm">
+                                                Eliminar
+                                            </button>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
-                        </div>
-                    <?php endwhile; ?>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
 
 </main>
 
 <div id="modal-eliminar-servicio" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
     <div class="w-full max-w-sm rounded-2xl border border-gray-100 bg-white p-6 shadow-xl">
         <h3 class="text-base font-semibold text-gray-800">Eliminar servicio</h3>
-        <p class="mt-2 text-sm text-gray-500">
+        <p class="mt-2 text-xs text-gray-500">
             ¿Seguro que querés eliminar <span id="nombre-servicio-eliminar" class="font-semibold text-gray-800"></span>?
             Los servicios con turnos actuales o históricos asociados no se pueden eliminar.
         </p>
@@ -128,14 +126,14 @@ $resultadoServicios = $conexion->query(
             const rect = btn.getBoundingClientRect();
 
             menu.style.top = `${rect.top + (rect.height / 2) - 16}px`;
-            menu.style.left = `${rect.left - 140}px`;
+            menu.style.left = `${rect.left - 135}px`;
 
             menu.classList.remove('hidden');
         }
     }
 
     function abrirModalEliminar(id, nombre) {
-        document.querySelectorAll('.action-menu').forEach(menu => menu.classList.add('hidden'));
+        document.querySelectorAll('.action-menu').forEach(m => m.classList.add('hidden'));
         document.getElementById('id-servicio-eliminar').value = id;
         document.getElementById('nombre-servicio-eliminar').textContent = nombre;
         const modal = document.getElementById('modal-eliminar-servicio');
@@ -149,15 +147,15 @@ $resultadoServicios = $conexion->query(
         modal.classList.remove('flex');
     }
 
+    const tabla_body = document.getElementById('tabla_body');
+
     document.addEventListener('click', () => {
         document.querySelectorAll('.action-menu').forEach(m => m.classList.add('hidden'));
     });
 
-    const tarjetasContainer = document.getElementById('tarjetas-container');
-    tarjetasContainer.addEventListener('scroll', () => {
+    tabla_body.addEventListener('scroll', () => {
         document.querySelectorAll('.action-menu').forEach(m => m.classList.add('hidden'));
     });
 </script>
 </body>
-
 </html>
